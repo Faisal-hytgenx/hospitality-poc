@@ -218,20 +218,20 @@ export default function ChatPage() {
           <Card title="Available Commands">
             <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
               <p><strong>Housekeeping:</strong></p>
-              <p>• "Show housekeeping status"</p>
-              <p>• "Assign cleaning for Room X"</p>
+              <p>• &quot;Show housekeeping status&quot;</p>
+              <p>• &quot;Assign cleaning for Room X&quot;</p>
               
               <p className="pt-2"><strong>Maintenance:</strong></p>
-              <p>• "How many pending requests?"</p>
-              <p>• "Remind maintenance for Room X"</p>
+              <p>• &quot;How many pending requests?&quot;</p>
+              <p>• &quot;Remind maintenance for Room X&quot;</p>
               
               <p className="pt-2"><strong>Revenue:</strong></p>
-              <p>• "What's the occupancy rate?"</p>
-              <p>• "Show RevPAR trends"</p>
+              <p>• &quot;What&apos;s the occupancy rate?&quot;</p>
+              <p>• &quot;Show RevPAR trends&quot;</p>
               
               <p className="pt-2"><strong>Alerts:</strong></p>
-              <p>• "Alert when occupancy drops below 70%"</p>
-              <p>• "Notify when satisfaction falls below 4.0"</p>
+              <p>• &quot;Alert when occupancy drops below 70%&quot;</p>
+              <p>• &quot;Notify when satisfaction falls below 4.0&quot;</p>
             </div>
           </Card>
         </div>
