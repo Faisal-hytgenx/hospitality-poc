@@ -1,0 +1,44 @@
+[
+  { 
+    "id": "m-1", 
+    "propertyId": "hyatt-san-antonio-nw", 
+    "issue": "HVAC check Room 202", 
+    "priority": "high", 
+    "status": "open",
+    "assignedTo": null,
+    "createdAt": "2025-01-13T08:00:00Z",
+    "notes": []
+  },
+  { 
+    "id": "m-2", 
+    "propertyId": "holiday-inn-san-antonio-nw", 
+    "issue": "Leaky faucet Room 118", 
+    "priority": "medium", 
+    "status": "open",
+    "assignedTo": null,
+    "createdAt": "2025-01-13T10:30:00Z",
+    "notes": []
+  },
+  { 
+    "id": "m-3", 
+    "propertyId": "hyatt-san-antonio-nw", 
+    "issue": "Leaky faucet Room 303", 
+    "priority": "low", 
+    "status": "in-progress",
+    "assignedTo": "mt-2",
+    "createdAt": "2025-01-12T14:15:00Z",
+    "notes": [
+      { "timestamp": "2025-01-13T09:00:00Z", "note": "Started repair work" }
+    ]
+  },
+  { 
+    "id": "m-4", 
+    "propertyId": "holiday-inn-stone-oak", 
+    "issue": "AC not working Room 202", 
+    "priority": "high", 
+    "status": "open",
+    "assignedTo": null,
+    "createdAt": "2025-01-13T11:45:00Z",
+    "notes": []
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "hyatt-san-antonio-nw",
+    "name": "Hyatt Place San Antonio NW Medical Center",
+    "location": "San Antonio, TX",
+    "roomsTotal": 120,
+    "occupancyRate": 0.85,
+    "adr": 150,
+    "revpar": 127.5
+  },
+  {
+    "id": "holiday-inn-san-antonio-nw",
+    "name": "Holiday Inn San Antonio NW",
+    "location": "San Antonio, TX",
+    "roomsTotal": 100,
+    "occupancyRate": 0.75,
+    "adr": 130,
+    "revpar": 97.5
+  },
+  {
+    "id": "holiday-inn-stone-oak",
+    "name": "Holiday Inn San Antonio Stone Oak Area",
+    "location": "San Antonio, TX",
+    "roomsTotal": 110,
+    "occupancyRate": 0.8,
+    "adr": 140,
+    "revpar": 112
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "housekeeping": {
+    "members": 15,
+    "avgRoomsPerDay": 12,
+    "pendingTasks": 5,
+    "people": [
+      { "id": "hk-1", "name": "Alex", "skills": ["cleaning"], "available": true },
+      { "id": "hk-2", "name": "Jamie", "skills": ["deep-clean"], "available": true },
+      { "id": "hk-3", "name": "Taylor", "skills": ["cleaning", "maintenance"], "available": false },
+      { "id": "hk-4", "name": "Morgan", "skills": ["cleaning"], "available": true },
+      { "id": "hk-5", "name": "Casey", "skills": ["deep-clean"], "available": true }
+    ]
+  },
+  "maintenance": {
+    "members": 5,
+    "avgRequestsPerDay": 3,
+    "pendingIssues": 2,
+    "people": [
+      { "id": "mt-1", "name": "Riley", "skills": ["HVAC"], "available": true },
+      { "id": "mt-2", "name": "Sam", "skills": ["plumbing"], "available": false },
+      { "id": "mt-3", "name": "Jordan", "skills": ["electrical"], "available": true },
+      { "id": "mt-4", "name": "Avery", "skills": ["HVAC", "plumbing"], "available": true }
+    ]
+  }
+}
