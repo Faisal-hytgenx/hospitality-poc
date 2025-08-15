@@ -1,4 +1,4 @@
-'use client';
+{`'use client';
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
@@ -11,55 +11,55 @@ const mockTasks = {
   housekeeping: [
     {
       id: 1,
-      title: 'Clean Room 301',
-      status: 'pending',
-      priority: 'high',
-      dueTime: '2:00 PM',
-      property: 'Luxury Hotel Downtown',
-      description: 'Full room cleaning and sanitization',
-      location: 'Floor 3'
+      title: "Clean Room 301",
+      status: "pending",
+      priority: "high",
+      dueTime: "2:00 PM",
+      property: "Luxury Hotel Downtown",
+      description: "Full room cleaning and sanitization",
+      location: "Floor 3"
     },
     {
       id: 2,
-      title: 'Restock Supplies',
-      status: 'in-progress',
-      priority: 'medium',
-      dueTime: '3:30 PM',
-      property: 'Luxury Hotel Downtown',
-      description: 'Restock cleaning supplies in storage',
-      location: 'Storage Room'
+      title: "Restock Supplies",
+      status: "in-progress",
+      priority: "medium",
+      dueTime: "3:30 PM",
+      property: "Luxury Hotel Downtown",
+      description: "Restock cleaning supplies in storage",
+      location: "Storage Room"
     },
     {
       id: 3,
-      title: 'Deep Clean Room 205',
-      status: 'completed',
-      priority: 'high',
-      dueTime: '12:00 PM',
-      property: 'Luxury Hotel Downtown',
-      description: 'Deep cleaning after guest checkout',
-      location: 'Floor 2'
+      title: "Deep Clean Room 205",
+      status: "completed",
+      priority: "high",
+      dueTime: "12:00 PM",
+      property: "Luxury Hotel Downtown",
+      description: "Deep cleaning after guest checkout",
+      location: "Floor 2"
     }
   ],
   maintenance: [
     {
       id: 1,
-      title: 'Fix AC in Room 205',
-      status: 'pending',
-      priority: 'high',
-      dueTime: '1:00 PM',
-      property: 'Resort & Spa',
-      description: 'AC not cooling properly',
-      location: 'Floor 2'
+      title: "Fix AC in Room 205",
+      status: "pending",
+      priority: "high",
+      dueTime: "1:00 PM",
+      property: "Resort & Spa",
+      description: "AC not cooling properly",
+      location: "Floor 2"
     },
     {
       id: 2,
-      title: 'Check Plumbing',
-      status: 'in-progress',
-      priority: 'medium',
-      dueTime: '4:30 PM',
-      property: 'Resort & Spa',
-      description: 'Routine plumbing inspection',
-      location: 'All Floors'
+      title: "Check Plumbing",
+      status: "in-progress",
+      priority: "medium",
+      dueTime: "4:30 PM",
+      property: "Resort & Spa",
+      description: "Routine plumbing inspection",
+      location: "All Floors"
     }
   ]
 };
@@ -77,9 +77,9 @@ const mockPerformance = {
     positiveReviews: 26,
     metrics: {
       roomsCleaned: 890,
-      suppliesUsed: '92%',
-      avgCleaningTime: '42 mins',
-      qualityScore: '96%'
+      suppliesUsed: "92%",
+      avgCleaningTime: "42 mins",
+      qualityScore: "96%"
     }
   },
   maintenance: {
@@ -93,9 +93,9 @@ const mockPerformance = {
     positiveReviews: 21,
     metrics: {
       repairsCompleted: 245,
-      partsUsed: '85%',
-      avgRepairTime: '55 mins',
-      firstTimeFixed: '94%'
+      partsUsed: "85%",
+      avgRepairTime: "55 mins",
+      firstTimeFixed: "94%"
     }
   }
 };
@@ -118,27 +118,27 @@ export default function StaffDashboard() {
 
   const getStatusBadge = (status) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      'in-progress': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-      completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+      pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      "in-progress": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      completed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status] || styles.pending}`}>
-        {status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+      <span className={\`px-2 py-1 rounded-full text-xs font-medium \${styles[status] || styles.pending}\`}>
+        {status.replace("-", " ").replace(/\\b\\w/g, l => l.toUpperCase())}
       </span>
     );
   };
 
   const getPriorityBadge = (priority) => {
     const styles = {
-      low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
-      medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+      low: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+      medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[priority] || styles.medium}`}>
+      <span className={\`px-2 py-1 rounded-full text-xs font-medium \${styles[priority] || styles.medium}\`}>
         {priority.charAt(0).toUpperCase() + priority.slice(1)}
       </span>
     );
@@ -146,8 +146,8 @@ export default function StaffDashboard() {
 
   const columns = [
     {
-      key: 'title',
-      label: 'Task',
+      key: "title",
+      label: "Task",
       render: (value, row) => (
         <div>
           <div className="font-medium">{value}</div>
@@ -161,18 +161,18 @@ export default function StaffDashboard() {
       )
     },
     {
-      key: 'priority',
-      label: 'Priority',
+      key: "priority",
+      label: "Priority",
       render: (value) => getPriorityBadge(value)
     },
     {
-      key: 'status',
-      label: 'Status',
+      key: "status",
+      label: "Status",
       render: (value) => getStatusBadge(value)
     },
     {
-      key: 'dueTime',
-      label: 'Due Time'
+      key: "dueTime",
+      label: "Due Time"
     }
   ];
 
@@ -185,28 +185,28 @@ export default function StaffDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
           title="Performance Score" 
-          value={`${performance?.efficiency || 0}%`}
+          value={\`\${performance?.efficiency || 0}%\`}
           subtitle="Overall Efficiency"
           trend="+2.5%"
           trendUp={true}
         />
         <Card 
           title="Task Completion" 
-          value={`${((performance?.tasksCompleted / performance?.monthlyTarget) * 100).toFixed(0)}%`}
-          subtitle={`${performance?.tasksCompleted || 0} of ${performance?.monthlyTarget || 0} Tasks`}
+          value={\`\${((performance?.tasksCompleted / performance?.monthlyTarget) * 100).toFixed(0)}%\`}
+          subtitle={\`\${performance?.tasksCompleted || 0} of \${performance?.monthlyTarget || 0} Tasks\`}
           trend="+5.8%"
           trendUp={true}
         />
         <Card 
           title="Customer Rating" 
-          value={`${performance?.rating || 0} ★`}
-          subtitle={`${performance?.positiveReviews || 0} Positive Reviews`}
+          value={\`\${performance?.rating || 0} ★\`}
+          subtitle={\`\${performance?.positiveReviews || 0} Positive Reviews\`}
           trend="+0.2"
           trendUp={true}
         />
         <Card 
           title="Attendance Streak" 
-          value={`${performance?.currentStreak || 0} Days`}
+          value={\`\${performance?.currentStreak || 0} Days\`}
           subtitle="Perfect Attendance"
           trend="+3 days"
           trendUp={true}
@@ -231,7 +231,7 @@ export default function StaffDashboard() {
         />
         <Card 
           title="Quality Score" 
-          value={performance?.metrics?.qualityScore || performance?.metrics?.firstTimeFixed || '0%'}
+          value={performance?.metrics?.qualityScore || performance?.metrics?.firstTimeFixed || "0%"}
           subtitle="Service Quality"
         />
       </div>
@@ -245,4 +245,4 @@ export default function StaffDashboard() {
       </div>
     </div>
   );
-}
+}`}
