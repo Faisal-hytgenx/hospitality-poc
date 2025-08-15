@@ -71,7 +71,7 @@ export default function ChatPage() {
   };
 
   const quickActions = [
-    "Show me today's housekeeping status",
+    "Show me today&apos;s housekeeping status",
     "How many maintenance requests are pending?",
     "What is the guest satisfaction score?",
     "What is the occupancy rate this week?",

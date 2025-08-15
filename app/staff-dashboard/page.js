@@ -237,7 +237,7 @@ export default function StaffDashboard() {
       </div>
 
       <div className="bg-[#101828] rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4 text-white">Today's Tasks</h2>
+        <h2 className="text-xl font-semibold mb-4 text-white">Today&apos;s Tasks</h2>
         <Table 
           data={tasks}
           columns={columns}

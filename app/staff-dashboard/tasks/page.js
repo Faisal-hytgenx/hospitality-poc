@@ -177,7 +177,7 @@ export default function TasksPage() {
         <Card 
           title="Completed" 
           value={tasks.filter(t => t.status === 'completed').length}
-          subtitle="Today's Finished Tasks"
+          subtitle="Today&apos;s Finished Tasks"
         />
       </div>
 
