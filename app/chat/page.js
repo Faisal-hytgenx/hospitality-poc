@@ -21,7 +21,7 @@ export default function ChatPage() {
       {
         id: 1,
         type: 'bot',
-        content: "Hello! I'm your hospitality assistant. I can help you with housekeeping status, maintenance requests, task assignments, and revenue analytics. What would you like to know?",
+       content: "Hello! I&apos;m your hospitality assistant. I can help you with housekeeping status, maintenance requests, task assignments, and revenue analytics. What would you like to know?",
         timestamp: new Date()
       }
     ]);
