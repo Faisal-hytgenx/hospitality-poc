@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": "admin1",
+      "username": "admin",
+      "password": "admin123",
+      "role": "admin",
+      "name": "Admin User"
+    },
+    {
+      "id": "owner1",
+      "username": "owner",
+      "password": "owner123",
+      "role": "owner",
+      "name": "John Smith",
+      "properties": ["property1", "property2"]
+    },
+    {
+      "id": "hk-1",
+      "username": "alex",
+      "password": "staff123",
+      "role": "staff",
+      "name": "Alex",
+      "staffId": "hk-1",
+      "department": "housekeeping",
+      "skills": ["cleaning"],
+      "assignedProperty": "property1"
+    },
+    {
+      "id": "mt-1",
+      "username": "riley",
+      "password": "staff123",
+      "role": "staff",
+      "name": "Riley",
+      "staffId": "mt-1",
+      "department": "maintenance",
+      "skills": ["HVAC"],
+      "assignedProperty": "property2"
+    }
+  ]
+}

@@ -1,8 +1,13 @@
+'use client';
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/context/AppContext";
+import { AuthProvider } from "@/context/AuthContext";
 import Navigation from "@/components/Navigation";
 import Toast from "@/components/Toast";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { usePathname } from 'next/navigation';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,11 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Sincere Hospitality - Dashboard",
-  description: "Enterprise hospitality management dashboard",
-};
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -27,13 +27,23 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning={true}
       >
         <AppProvider>
-          <div className="flex h-screen">
-            <Navigation />
-            <main className="flex-1 overflow-auto">
-              {children}
-            </main>
-          </div>
-          <Toast />
+          <AuthProvider>
+            <ProtectedRoute>
+              {usePathname() === '/login' ? (
+                <main className="w-full">
+                  {children}
+                </main>
+              ) : (
+                <div className="flex h-screen">
+                  <Navigation />
+                  <main className="flex-1 overflow-auto">
+                    {children}
+                  </main>
+                </div>
+              )}
+            </ProtectedRoute>
+            <Toast />
+          </AuthProvider>
         </AppProvider>
       </body>
     </html>

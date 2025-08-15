@@ -1,131 +1,171 @@
 'use client';
 
 import { useState } from 'react';
-import { useApp } from '@/context/AppContext';
-import { filterDataByProperty } from '@/lib/calc';
 import Card from '@/components/Card';
 import Table from '@/components/Table';
-import Filters from '@/components/Filters';
 
-export default function MaintenancePage() {
-  const { state, dispatch } = useApp();
-  const [filters, setFilters] = useState({});
-
-  // Filter maintenance requests based on selected property and additional filters
-  let filteredMaintenance = filterDataByProperty(state.maintenance, state.selectedProperty);
-  
-  if (filters.status) {
-    filteredMaintenance = filteredMaintenance.filter(item => item.status === filters.status);
-  }
-  if (filters.priority) {
-    filteredMaintenance = filteredMaintenance.filter(item => item.priority === filters.priority);
-  }
-  if (filters.issue) {
-    filteredMaintenance = filteredMaintenance.filter(item => 
-      item.issue.toLowerCase().includes(filters.issue.toLowerCase())
-    );
-  }
-
-  const handleUpdateStatus = (item, newStatus) => {
-    dispatch({
-      type: 'UPDATE_MAINTENANCE_STATUS',
-      payload: {
-        id: item.id,
-        status: newStatus
-      }
-    });
-  };
-
-  const handleAssignMaintenance = (item) => {
-    // Find available maintenance staff with relevant skills
-    const availableStaff = state.staff.maintenance.people.filter(person => {
-      if (!person.available) return false;
-      
-      // Check if staff has relevant skills for the issue
-      const issueType = item.issue.toLowerCase();
-      if (issueType.includes('hvac') && person.skills.includes('HVAC')) return true;
-      if (issueType.includes('plumbing') && person.skills.includes('plumbing')) return true;
-      if (issueType.includes('electrical') && person.skills.includes('electrical')) return true;
-      
-      return true; // Generic assignment if no specific skill match
-    });
-    
-    if (availableStaff.length === 0) {
-      dispatch({
-        type: 'ADD_TOAST',
-        payload: {
-          message: 'No maintenance staff currently available',
-          type: 'warning'
-        }
-      });
-      return;
+// Mock data for maintenance
+const maintenanceData = {
+  overview: {
+    totalStaff: 25,
+    activeStaff: 22,
+    openTickets: 45,
+    resolvedToday: 28,
+    avgResponseTime: '35 mins',
+    satisfaction: 4.9
+  },
+  staff: [
+    {
+      id: 'mt-1',
+      name: 'Riley Wilson',
+      property: 'Resort & Spa',
+      currentTask: 'AC Maintenance',
+      tasksCompleted: 5,
+      efficiency: 97,
+      status: 'active',
+      specialty: 'HVAC'
+    },
+    {
+      id: 'mt-2',
+      name: 'Sam Davis',
+      property: 'Luxury Hotel Downtown',
+      currentTask: 'Plumbing Repair Room 402',
+      tasksCompleted: 4,
+      efficiency: 96,
+      status: 'active',
+      specialty: 'Plumbing'
+    },
+    {
+      id: 'mt-3',
+      name: 'Jordan Lee',
+      property: 'Business Hotel Central',
+      currentTask: 'Electrical Inspection',
+      tasksCompleted: 6,
+      efficiency: 98,
+      status: 'break',
+      specialty: 'Electrical'
     }
+  ],
+  tickets: [
+    {
+      id: 1,
+      location: 'Room 402',
+      issue: 'Shower Leak',
+      status: 'in-progress',
+      assignedTo: 'Sam Davis',
+      property: 'Luxury Hotel Downtown',
+      priority: 'high',
+      type: 'Plumbing'
+    },
+    {
+      id: 2,
+      location: 'Floor 3',
+      issue: 'AC Maintenance',
+      status: 'in-progress',
+      assignedTo: 'Riley Wilson',
+      property: 'Resort & Spa',
+      priority: 'medium',
+      type: 'HVAC'
+    },
+    {
+      id: 3,
+      location: 'Common Area',
+      issue: 'Electrical Inspection',
+      status: 'pending',
+      assignedTo: 'Jordan Lee',
+      property: 'Business Hotel Central',
+      priority: 'medium',
+      type: 'Electrical'
+    }
+  ]
+};
 
-    const assignedStaff = availableStaff[0];
-    
-    dispatch({
-      type: 'ASSIGN_MAINTENANCE',
-      payload: {
-        id: item.id,
-        staffId: assignedStaff.id,
-        staffName: assignedStaff.name
-      }
-    });
-  };
-
-  const handleRemind = (item) => {
-    dispatch({
-      type: 'ADD_MAINTENANCE_NOTE',
-      payload: {
-        id: item.id,
-        note: `Reminder sent via maintenance dashboard at ${new Date().toLocaleString()}`
-      }
-    });
-  };
-
+export default function MaintenanceDashboard() {
   const getStatusBadge = (status) => {
     const styles = {
-      open: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-      'in-progress': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      resolved: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+      active: 'bg-green-100 text-green-800',
+      break: 'bg-yellow-100 text-yellow-800',
+      'in-progress': 'bg-blue-100 text-blue-800',
+      pending: 'bg-gray-100 text-gray-800'
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status] || styles.open}`}>
-        {status.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
   };
 
   const getPriorityBadge = (priority) => {
     const styles = {
-      low: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-      medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+      high: 'bg-red-100 text-red-800',
+      medium: 'bg-yellow-100 text-yellow-800',
+      low: 'bg-green-100 text-green-800'
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[priority] || styles.medium}`}>
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[priority]}`}>
         {priority.charAt(0).toUpperCase() + priority.slice(1)}
       </span>
     );
   };
 
-  const columns = [
+  const getTypeBadge = (type) => {
+    const styles = {
+      'HVAC': 'bg-purple-100 text-purple-800',
+      'Plumbing': 'bg-blue-100 text-blue-800',
+      'Electrical': 'bg-orange-100 text-orange-800'
+    };
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[type]}`}>
+        {type}
+      </span>
+    );
+  };
+
+  const staffColumns = [
+    {
+      key: 'name',
+      label: 'Staff Member'
+    },
+    {
+      key: 'property',
+      label: 'Property'
+    },
+    {
+      key: 'specialty',
+      label: 'Specialty',
+      render: (value) => getTypeBadge(value)
+    },
+    {
+      key: 'currentTask',
+      label: 'Current Task'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => getStatusBadge(value)
+    }
+  ];
+
+  const ticketColumns = [
+    {
+      key: 'location',
+      label: 'Location'
+    },
     {
       key: 'issue',
-      label: 'Issue',
-      render: (value, row) => (
-        <div>
-          <div className="font-medium">{value}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            {state.properties.find(p => p.id === row.propertyId)?.name}
-          </div>
-          <div className="text-xs text-gray-400 mt-1">
-            Created: {new Date(row.createdAt).toLocaleDateString()}
-          </div>
-        </div>
-      )
+      label: 'Issue'
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      render: (value) => getTypeBadge(value)
+    },
+    {
+      key: 'assignedTo',
+      label: 'Assigned To'
     },
     {
       key: 'priority',
@@ -136,148 +176,48 @@ export default function MaintenancePage() {
       key: 'status',
       label: 'Status',
       render: (value) => getStatusBadge(value)
-    },
-    {
-      key: 'assignedTo',
-      label: 'Assigned To',
-      render: (value) => {
-        if (!value) return <span className="text-gray-400">Unassigned</span>;
-        const staff = state.staff.maintenance.people.find(p => p.id === value);
-        return staff ? staff.name : 'Unknown';
-      }
-    },
-    {
-      key: 'notes',
-      label: 'Notes',
-      render: (value) => value && value.length > 0 ? `${value.length} note(s)` : '-'
-    }
-  ];
-
-  const getActions = (item) => {
-    const actions = [];
-
-    if (item.status === 'open') {
-      actions.push({
-        label: 'Assign',
-        onClick: () => handleAssignMaintenance(item),
-        className: 'bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800'
-      });
-      actions.push({
-        label: 'Start Work',
-        onClick: () => handleUpdateStatus(item, 'in-progress'),
-        className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900 dark:text-yellow-300 dark:hover:bg-yellow-800'
-      });
-    }
-
-    if (item.status === 'in-progress') {
-      actions.push({
-        label: 'Mark Resolved',
-        onClick: () => handleUpdateStatus(item, 'resolved'),
-        className: 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800'
-      });
-    }
-
-    actions.push({
-      label: 'Remind',
-      onClick: () => handleRemind(item),
-      className: 'bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800'
-    });
-
-    return actions;
-  };
-
-  const filterOptions = [
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
-      options: [
-        { value: 'open', label: 'Open' },
-        { value: 'in-progress', label: 'In Progress' },
-        { value: 'resolved', label: 'Resolved' }
-      ]
-    },
-    {
-      key: 'priority',
-      label: 'Priority',
-      type: 'select',
-      options: [
-        { value: 'low', label: 'Low' },
-        { value: 'medium', label: 'Medium' },
-        { value: 'high', label: 'High' }
-      ]
-    },
-    {
-      key: 'issue',
-      label: 'Issue',
-      type: 'text',
-      placeholder: 'Search issues...'
     }
   ];
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Maintenance Management
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Track and manage maintenance requests and work orders
-        </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Maintenance Management</h1>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-            {state.metrics.maintenance.open}
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Open Requests
-          </div>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-            {state.metrics.maintenance.inProgress}
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            In Progress
-          </div>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-            {state.metrics.maintenance.resolved}
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Resolved
-          </div>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            {state.staff.maintenance.people.filter(p => p.available).length}
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Available Staff
-          </div>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <Filters
-        filters={filterOptions}
-        onFilterChange={setFilters}
-        onReset={() => setFilters({})}
-      />
-
-      {/* Maintenance Requests Table */}
-      <Card title="Maintenance Requests" subtitle={`${filteredMaintenance.length} requests`}>
-        <Table
-          columns={columns}
-          data={filteredMaintenance}
-          actions={filteredMaintenance.map(item => getActions(item))}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card 
+          title="Active Staff" 
+          value={maintenanceData.overview.activeStaff}
+          subtitle={`of ${maintenanceData.overview.totalStaff} Total Staff`}
         />
-      </Card>
+        <Card 
+          title="Open Tickets" 
+          value={maintenanceData.overview.openTickets}
+          subtitle={`${maintenanceData.overview.resolvedToday} Resolved Today`}
+        />
+        <Card 
+          title="Response Time" 
+          value={maintenanceData.overview.avgResponseTime}
+          subtitle="Average Response"
+        />
+      </div>
+
+      <div className="bg-[#101828] rounded-lg shadow p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-white">Maintenance Staff</h2>
+        <Table 
+          data={maintenanceData.staff}
+          columns={staffColumns}
+        />
+      </div>
+
+      <div className="bg-[#101828] rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold mb-4 text-white">Active Tickets</h2>
+        <Table 
+          data={maintenanceData.tickets}
+          columns={ticketColumns}
+        />
+      </div>
     </div>
   );
 }

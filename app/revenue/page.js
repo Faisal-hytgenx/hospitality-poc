@@ -1,480 +1,204 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useApp } from '@/context/AppContext';
-import { filterDataByProperty, formatCurrency, formatPercentage } from '@/lib/calc';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import Card from '@/components/Card';
-import Chart from '@/components/Chart';
-import KPI from '@/components/KPI';
+import Table from '@/components/Table';
+import { revenueData } from '@/data/revenueData';
 
 export default function RevenuePage() {
-  const { state } = useApp();
-  const [timeWindow, setTimeWindow] = useState('30d');
-  const [selectedMetrics, setSelectedMetrics] = useState(['occupancy', 'adr', 'revpar']);
+  const { user } = useAuth();
+  const [selectedPeriod, setSelectedPeriod] = useState('30days');
 
-  // Dummy forecast data for POC
-  const forecastData = [
-    { period: 'Next 7 Days', occupancy: 0.87, adr: 155, revpar: 134.9, confidence: 92 },
-    { period: 'Next 30 Days', occupancy: 0.84, adr: 152, revpar: 127.7, confidence: 85 },
-    { period: 'Next Quarter', occupancy: 0.81, adr: 148, revpar: 119.9, confidence: 78 }
-  ];
-
-  // Dummy competitive analysis data
-  const competitiveData = [
-    { property: 'Our Properties (Avg)', occupancy: 0.83, adr: 145, revpar: 120.4, marketShare: '15.2%' },
-    { property: 'Marriott Hotels', occupancy: 0.79, adr: 162, revpar: 128.0, marketShare: '22.1%' },
-    { property: 'Hilton Hotels', occupancy: 0.81, adr: 158, revpar: 128.0, marketShare: '18.7%' },
-    { property: 'IHG Hotels', occupancy: 0.77, adr: 142, revpar: 109.3, marketShare: '12.8%' },
-    { property: 'Independent', occupancy: 0.74, adr: 138, revpar: 102.1, marketShare: '31.2%' }
-  ];
-
-  // Dummy seasonal trends
-  const seasonalTrends = [
-    { month: 'Jan', occupancy: 0.72, adr: 138, revpar: 99.4 },
-    { month: 'Feb', occupancy: 0.78, adr: 142, revpar: 110.8 },
-    { month: 'Mar', occupancy: 0.85, adr: 158, revpar: 134.3 },
-    { month: 'Apr', occupancy: 0.88, adr: 165, revpar: 145.2 },
-    { month: 'May', occupancy: 0.82, adr: 152, revpar: 124.6 },
-    { month: 'Jun', occupancy: 0.79, adr: 148, revpar: 116.9 },
-    { month: 'Jul', occupancy: 0.86, adr: 162, revpar: 139.3 },
-    { month: 'Aug', occupancy: 0.84, adr: 159, revpar: 133.6 },
-    { month: 'Sep', occupancy: 0.87, adr: 168, revpar: 146.2 },
-    { month: 'Oct', occupancy: 0.91, adr: 172, revpar: 156.5 },
-    { month: 'Nov', occupancy: 0.89, adr: 165, revpar: 146.9 },
-    { month: 'Dec', occupancy: 0.85, adr: 155, revpar: 131.8 }
-  ];
-
-  // Filter revenue data based on selected property and time window
-  const filteredData = useMemo(() => {
-    let data = filterDataByProperty(state.revenueTimeseries, state.selectedProperty);
-    
-    const days = timeWindow === '7d' ? 7 : 30;
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
-    
-    return data
-      .filter(item => new Date(item.date) >= cutoffDate)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [state.revenueTimeseries, state.selectedProperty, timeWindow]);
-
-  // Calculate aggregated metrics for the time period
-  const periodMetrics = useMemo(() => {
-    if (filteredData.length === 0) return { occupancy: 0, adr: 0, revpar: 0 };
-
-    const totalOccupancy = filteredData.reduce((sum, item) => sum + item.occupancy, 0);
-    const totalRevenue = filteredData.reduce((sum, item) => sum + item.revpar, 0);
-    const avgADR = filteredData.reduce((sum, item) => sum + item.adr, 0) / filteredData.length;
-
-    return {
-      occupancy: totalOccupancy / filteredData.length,
-      adr: avgADR,
-      revpar: totalRevenue / filteredData.length
+  const getTrendBadge = (trend) => {
+    const styles = {
+      increasing: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      decreasing: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+      stable: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
     };
-  }, [filteredData]);
 
-  // Prepare chart data
-  const chartData = useMemo(() => {
-    const labels = filteredData.map(item => 
-      new Date(item.date).toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
-      })
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[trend]}`}>
+        {trend.charAt(0).toUpperCase() + trend.slice(1)}
+      </span>
     );
+  };
 
-    const datasets = [];
+  const getProgressBar = (value, max) => {
+    const percentage = (value / max) * 100;
+    return (
+      <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+        <div 
+          className="bg-blue-600 h-2.5 rounded-full" 
+          style={{ width: `${percentage}%` }}
+        ></div>
+      </div>
+    );
+  };
 
-    if (selectedMetrics.includes('occupancy')) {
-      datasets.push({
-        label: 'Occupancy Rate (%)',
-        data: filteredData.map(item => (item.occupancy * 100).toFixed(1)),
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        yAxisID: 'y',
-      });
-    }
-
-    if (selectedMetrics.includes('adr')) {
-      datasets.push({
-        label: 'ADR ($)',
-        data: filteredData.map(item => item.adr),
-        borderColor: 'rgb(16, 185, 129)',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        yAxisID: 'y1',
-      });
-    }
-
-    if (selectedMetrics.includes('revpar')) {
-      datasets.push({
-        label: 'RevPAR ($)',
-        data: filteredData.map(item => item.revpar),
-        borderColor: 'rgb(245, 158, 11)',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-        yAxisID: 'y1',
-      });
-    }
-
-    return { labels, datasets };
-  }, [filteredData, selectedMetrics]);
-
-  const chartOptions = {
-    scales: {
-      y: {
-        type: 'linear',
-        display: selectedMetrics.includes('occupancy'),
-        position: 'left',
-        title: {
-          display: true,
-          text: 'Occupancy Rate (%)',
-        },
-        max: 100,
-      },
-      y1: {
-        type: 'linear',
-        display: selectedMetrics.includes('adr') || selectedMetrics.includes('revpar'),
-        position: 'right',
-        title: {
-          display: true,
-          text: 'Revenue ($)',
-        },
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
+  const competitorColumns = [
+    {
+      key: 'name',
+      label: 'Property',
+      render: (value) => (
+        <div className={value === 'Our Properties' ? 'font-semibold text-blue-600' : ''}>
+          {value}
+        </div>
+      )
     },
-  };
-
-  // Calculate trends (mock calculation for demo)
-  const getTrend = (current, previous) => {
-    if (!previous) return 0;
-    return ((current - previous) / previous * 100).toFixed(1);
-  };
-
-  const handleMetricToggle = (metric) => {
-    if (selectedMetrics.includes(metric)) {
-      setSelectedMetrics(selectedMetrics.filter(m => m !== metric));
-    } else {
-      setSelectedMetrics([...selectedMetrics, metric]);
+    {
+      key: 'marketShare',
+      label: 'Market Share',
+      render: (value) => `${value}%`
+    },
+    {
+      key: 'avgRate',
+      label: 'Avg. Daily Rate',
+      render: (value) => `$${value}`
     }
-  };
+  ];
+
+  const channelColumns = [
+    {
+      key: 'channel',
+      label: 'Booking Channel'
+    },
+    {
+      key: 'percentage',
+      label: 'Distribution',
+      render: (value) => `${value}%`
+    },
+    {
+      key: 'trend',
+      label: 'Trend',
+      render: (value) => getTrendBadge(value)
+    }
+  ];
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Revenue Analytics
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Track occupancy, ADR, and RevPAR trends across properties
-        </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Revenue Analytics</h1>
       </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-        <div className="flex items-center space-x-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Time Window
-            </label>
-            <select
-              value={timeWindow}
-              onChange={(e) => setTimeWindow(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="7d">Last 7 Days</option>
-              <option value="30d">Last 30 Days</option>
-            </select>
+      {/* Revenue Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <Card 
+          title="Monthly Revenue" 
+          value={`$${(revenueData.trends.last30Days.total/1000).toFixed(1)}K`}
+          trend="+12.5%"
+          trendUp={true}
+          subtitle="vs Last Month"
+        />
+        <Card 
+          title="Occupancy Rate" 
+          value={`${revenueData.trends.last30Days.metrics.occupancyRate}%`}
+          trend="+5.2%"
+          trendUp={true}
+          subtitle="Current Period"
+        />
+        <Card 
+          title="RevPAR" 
+          value={`$${revenueData.trends.last30Days.metrics.revPAR}`}
+          trend="+8.3%"
+          trendUp={true}
+          subtitle="Revenue Per Room"
+        />
+        <Card 
+          title="Market Share" 
+          value={`${revenueData.competitiveAnalysis.marketShare}%`}
+          trend="+2.1%"
+          trendUp={true}
+          subtitle="In Local Market"
+        />
+      </div>
+
+      {/* AI Insights and Forecast */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">AI Revenue Forecast</h2>
+          <div className="space-y-4">
+            <div>
+              <p className="text-gray-400 mb-1">Next Month Prediction</p>
+              <p className="text-2xl font-bold text-white">${(revenueData.forecast.nextMonth.predictedRevenue/1000).toFixed(1)}K</p>
+              <p className="text-sm text-gray-400">Confidence: {revenueData.forecast.nextMonth.confidence}%</p>
+            </div>
+            <div className="border-t border-gray-700 pt-4">
+              <p className="text-gray-400 mb-2">Key Factors:</p>
+              {revenueData.forecast.nextMonth.factors.map((factor, index) => (
+                <div key={index} className="flex justify-between items-center mb-2">
+                  <span className="text-gray-300">{factor.name}</span>
+                  <span className="text-green-400">{factor.impact}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Show:
-          </span>
-          {[
-            { key: 'occupancy', label: 'Occupancy', color: 'blue' },
-            { key: 'adr', label: 'ADR', color: 'green' },
-            { key: 'revpar', label: 'RevPAR', color: 'yellow' }
-          ].map((metric) => (
-            <button
-              key={metric.key}
-              onClick={() => handleMetricToggle(metric.key)}
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                selectedMetrics.includes(metric.key)
-                  ? `bg-${metric.color}-100 text-${metric.color}-800 dark:bg-${metric.color}-900 dark:text-${metric.color}-300`
-                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-              }`}
-            >
-              {metric.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <KPI
-          title={`Average Occupancy (${timeWindow})`}
-          value={periodMetrics.occupancy}
-          type="percentage"
-          icon="🏨"
-          trend={2.5}
-        />
-        <KPI
-          title={`Average ADR (${timeWindow})`}
-          value={periodMetrics.adr}
-          type="currency"
-          icon="💵"
-          trend={1.8}
-        />
-        <KPI
-          title={`Average RevPAR (${timeWindow})`}
-          value={periodMetrics.revpar}
-          type="currency"
-          icon="📈"
-          trend={4.2}
-        />
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 gap-8">
-        <Card title="Revenue Trends" subtitle={`${timeWindow === '7d' ? '7-day' : '30-day'} performance overview`}>
-          <Chart
-            data={chartData}
-            options={chartOptions}
-          />
-        </Card>
-
-        {/* Property Comparison */}
-        {state.selectedProperty === 'all' && (
-          <Card title="Property Comparison" subtitle="Current period performance by property">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {state.properties.map((property) => {
-                const propertyData = filteredData.filter(item => item.propertyId === property.id);
-                const avgOccupancy = propertyData.reduce((sum, item) => sum + item.occupancy, 0) / propertyData.length;
-                const avgADR = propertyData.reduce((sum, item) => sum + item.adr, 0) / propertyData.length;
-                const avgRevPAR = propertyData.reduce((sum, item) => sum + item.revpar, 0) / propertyData.length;
-
-                return (
-                  <div key={property.id} className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-3">
-                      {property.name}
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Occupancy:</span>
-                        <span className="font-medium">{formatPercentage(avgOccupancy)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">ADR:</span>
-                        <span className="font-medium">{formatCurrency(avgADR)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">RevPAR:</span>
-                        <span className="font-medium">{formatCurrency(avgRevPAR)}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        )}
-
-        {/* Revenue Insights Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-          {/* Revenue Forecast */}
-          <Card title="Revenue Forecast" subtitle="AI-powered predictions for upcoming periods">
-            <div className="space-y-4">
-              {forecastData.map((forecast, index) => (
-                <div key={index} className="border-l-4 border-blue-500 pl-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">
-                      {forecast.period}
-                    </h4>
-                    <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                      {forecast.confidence}% confidence
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">Occupancy</span>
-                      <p className="font-medium">{formatPercentage(forecast.occupancy)}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">ADR</span>
-                      <p className="font-medium">{formatCurrency(forecast.adr)}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">RevPAR</span>
-                      <p className="font-medium">{formatCurrency(forecast.revpar)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Competitive Analysis */}
-          <Card title="Competitive Analysis" subtitle="Market positioning vs. competitors">
-            <div className="space-y-3">
-              {competitiveData.map((comp, index) => (
-                <div key={index} className={`p-3 rounded-lg ${comp.property.includes('Our') ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                  <div className="flex justify-between items-center mb-2">
-                    <h4 className={`font-medium ${comp.property.includes('Our') ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-white'}`}>
-                      {comp.property}
-                    </h4>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {comp.marketShare} market share
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 text-sm">
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">Occ</span>
-                      <p className="font-medium">{formatPercentage(comp.occupancy)}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">ADR</span>
-                      <p className="font-medium">{formatCurrency(comp.adr)}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-600 dark:text-gray-400">RevPAR</span>
-                      <p className="font-medium">{formatCurrency(comp.revpar)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Seasonal Trends */}
-        <Card title="Seasonal Performance Trends" subtitle="12-month historical pattern analysis" className="mt-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {seasonalTrends.map((month, index) => (
-              <div key={index} className="text-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                  {month.month}
-                </h4>
-                <div className="space-y-1 text-sm">
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">Occ: </span>
-                    <span className="font-medium">{formatPercentage(month.occupancy)}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">ADR: </span>
-                    <span className="font-medium">{formatCurrency(month.adr)}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">RevPAR: </span>
-                    <span className="font-medium">{formatCurrency(month.revpar)}</span>
-                  </div>
-                </div>
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">Key Insights</h2>
+          <div className="space-y-4">
+            {revenueData.keyInsights.map((insight, index) => (
+              <div key={index} className="border-b border-gray-700 pb-4 last:border-0">
+                <h3 className="text-blue-400 font-medium">{insight.title}</h3>
+                <p className="text-gray-300 text-sm mt-1">{insight.insight}</p>
+                <p className="text-gray-400 text-sm mt-1">→ {insight.recommendation}</p>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
+      </div>
 
-        {/* Revenue Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-          <Card title="Key Insights" subtitle="AI-generated revenue analysis">
-            <div className="space-y-3">
-              <div className="flex items-start space-x-2">
-                <span className="text-green-600 dark:text-green-400 text-lg">📈</span>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Strong Q4 Performance
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    RevPAR increased 8.2% vs. last quarter
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-2">
-                <span className="text-blue-600 dark:text-blue-400 text-lg">🎯</span>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Pricing Optimization
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    ADR outperforming market by 12%
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-2">
-                <span className="text-yellow-600 dark:text-yellow-400 text-lg">⚠️</span>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Weekend Opportunities
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Saturday occupancy 15% below weekdays
-                  </p>
-                </div>
-              </div>
+      {/* Market Position */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Competitive Analysis</h2>
+          <Table 
+            data={revenueData.competitiveAnalysis.competitors}
+            columns={competitorColumns}
+          />
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Booking Channel Distribution</h2>
+          <Table 
+            data={revenueData.bookingPatterns.channelDistribution}
+            columns={channelColumns}
+          />
+        </div>
+      </div>
+
+      {/* Revenue Goals */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold mb-4">2025 Revenue Goals</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-gray-600 mb-2">Yearly Target: ${(revenueData.revenueGoals.yearly.target/1000000).toFixed(1)}M</p>
+            <div className="mb-4">
+              {getProgressBar(
+                revenueData.revenueGoals.yearly.current,
+                revenueData.revenueGoals.yearly.target
+              )}
+              <p className="text-sm text-gray-500 mt-1">
+                Progress: {revenueData.revenueGoals.yearly.progress}%
+              </p>
             </div>
-          </Card>
-
-          <Card title="Booking Patterns" subtitle="Guest behavior analysis">
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600 dark:text-gray-400">Direct Bookings</span>
-                  <span className="font-medium">45%</span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: '45%' }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600 dark:text-gray-400">OTA Bookings</span>
-                  <span className="font-medium">35%</span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{ width: '35%' }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600 dark:text-gray-400">Corporate</span>
-                  <span className="font-medium">20%</span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div className="bg-yellow-600 h-2 rounded-full" style={{ width: '20%' }}></div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card title="Revenue Goals" subtitle="2025 targets and progress">
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600 dark:text-gray-400">Annual RevPAR Target</span>
-                  <span className="font-medium">$145.00</span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: '83%' }}></div>
-                </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Current: $120.40 (83% of target)
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {Object.entries(revenueData.revenueGoals.keyMetrics).map(([key, value]) => (
+              <div key={key} className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">{key.toUpperCase()}</p>
+                <p className="text-xl font-semibold">
+                  {key === 'avgDailyRate' ? '$' : ''}{value.current}
+                  {key === 'occupancy' ? '%' : ''}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Target: {key === 'avgDailyRate' ? '$' : ''}{value.target}
+                  {key === 'occupancy' ? '%' : ''}
                 </p>
               </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600 dark:text-gray-400">Occupancy Target</span>
-                  <span className="font-medium">85%</span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{ width: '98%' }}></div>
-                </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Current: 83% (98% of target)
-                </p>
-              </div>
-            </div>
-          </Card>
+            ))}
+          </div>
         </div>
       </div>
     </div>

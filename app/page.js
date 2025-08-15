@@ -1,193 +1,189 @@
 'use client';
 
-import { useApp } from '@/context/AppContext';
-import KPI from '@/components/KPI';
+import { useState } from 'react';
 import Card from '@/components/Card';
+import Table from '@/components/Table';
 
-export default function Dashboard() {
-  const { state } = useApp();
-  const { metrics, guestMetrics } = state;
-
-  // Get recent alerts (mock for now)
-  const alerts = [
+// Mock data for admin dashboard
+const adminData = {
+  overview: {
+    totalStaff: 80,
+    activeStaff: 72,
+    totalProperties: 3,
+    avgEfficiency: 96,
+    taskCompletion: 94,
+    staffSatisfaction: 4.7
+  },
+  properties: [
     {
-      id: 1,
-      type: 'warning',
-      message: 'Room 202 HVAC needs attention',
-      timestamp: '2 hours ago'
+      id: 'property1',
+      name: 'Luxury Hotel Downtown',
+      staff: 25,
+      occupancy: '87%',
+      efficiency: 96,
+      revenue: '$124,500',
+      tasks: { total: 45, completed: 42 }
     },
     {
-      id: 2,
-      type: 'info',
-      message: '5 rooms pending housekeeping',
-      timestamp: '30 minutes ago'
+      id: 'property2',
+      name: 'Resort & Spa',
+      staff: 35,
+      occupancy: '92%',
+      efficiency: 98,
+      revenue: '$156,800',
+      tasks: { total: 60, completed: 57 }
+    },
+    {
+      id: 'property3',
+      name: 'Business Hotel Central',
+      staff: 20,
+      occupancy: '85%',
+      efficiency: 94,
+      revenue: '$98,300',
+      tasks: { total: 35, completed: 32 }
+    }
+  ]
+};
+
+export default function AdminDashboard() {
+  const [selectedProperty, setSelectedProperty] = useState(adminData.properties[0]);
+
+  const getEfficiencyBadge = (value) => {
+    const styles = {
+      high: 'bg-green-100 text-green-800',
+      medium: 'bg-yellow-100 text-yellow-800',
+      low: 'bg-red-100 text-red-800'
+    };
+    const level = value >= 95 ? 'high' : value >= 90 ? 'medium' : 'low';
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[level]}`}>
+        {value}%
+      </span>
+    );
+  };
+
+  const propertyColumns = [
+    { 
+      key: 'name',
+      label: 'Property'
+    },
+    {
+      key: 'staff',
+      label: 'Staff',
+      render: (value) => `${value} members`
+    },
+    {
+      key: 'occupancy',
+      label: 'Occupancy'
+    },
+    {
+      key: 'efficiency',
+      label: 'Efficiency',
+      render: (value) => getEfficiencyBadge(value)
+    },
+    {
+      key: 'tasks',
+      label: 'Tasks',
+      render: (value) => `${value.completed}/${value.total}`
     }
   ];
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Executive Dashboard
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Real-time operational overview for {state.selectedProperty === 'all' ? 'all properties' : state.properties.find(p => p.id === state.selectedProperty)?.name}
-        </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
       </div>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <KPI
-          title="Occupancy Rate"
-          value={metrics.aggregate.occupancyRate}
-          type="percentage"
-          icon="🏨"
-          trend={2.5}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card 
+          title="Total Staff" 
+          value={adminData.overview.totalStaff}
+          subtitle={`${adminData.overview.activeStaff} Active Members`}
+          trend="+5"
+          trendUp={true}
         />
-        <KPI
-          title="Average Daily Rate"
-          value={metrics.aggregate.adr}
-          type="currency"
-          icon="💵"
-          trend={1.2}
+        <Card 
+          title="Properties" 
+          value={adminData.overview.totalProperties}
+          subtitle="Under Management"
         />
-        <KPI
-          title="Revenue per Available Room"
-          value={metrics.aggregate.revpar}
-          type="currency"
-          icon="📈"
-          trend={3.8}
-        />
-        <KPI
-          title="Guest Satisfaction"
-          value={guestMetrics.satisfaction}
-          subtitle="out of 5.0"
-          icon="⭐"
-          trend={0.5}
+        <Card 
+          title="Staff Satisfaction" 
+          value={`${adminData.overview.staffSatisfaction} ★`}
+          subtitle="Average Rating"
+          trend="+0.2"
+          trendUp={true}
         />
       </div>
 
-      {/* Operational Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <Card title="Housekeeping Status" subtitle="Current room status">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Cleaned</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">
-                {metrics.housekeeping.cleaned}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Pending</span>
-              <span className="font-semibold text-yellow-600 dark:text-yellow-400">
-                {metrics.housekeeping.pending}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Maintenance Required</span>
-              <span className="font-semibold text-red-600 dark:text-red-400">
-                {metrics.housekeeping.maintenanceRequired}
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        <Card title="Maintenance Requests" subtitle="Current status overview">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Open</span>
-              <span className="font-semibold text-red-600 dark:text-red-400">
-                {metrics.maintenance.open}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">In Progress</span>
-              <span className="font-semibold text-yellow-600 dark:text-yellow-400">
-                {metrics.maintenance.inProgress}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Resolved</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">
-                {metrics.maintenance.resolved}
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        <Card title="Guest Services" subtitle="Response metrics">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</span>
-              <span className="font-semibold text-blue-600 dark:text-blue-400">
-                {guestMetrics.avgResponseMins} min
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Satisfaction Score</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">
-                {guestMetrics.satisfaction}/5.0
-              </span>
-            </div>
-          </div>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card 
+          title="Task Completion" 
+          value={`${adminData.overview.taskCompletion}%`}
+          subtitle="Across All Properties"
+          trend="+2.5%"
+          trendUp={true}
+        />
+        <Card 
+          title="Efficiency Score" 
+          value={`${adminData.overview.avgEfficiency}%`}
+          subtitle="Average Performance"
+          trend="+1.8%"
+          trendUp={true}
+        />
+        <Card 
+          title="Total Revenue" 
+          value="$379.6K"
+          subtitle="All Properties"
+          trend="+8.5%"
+          trendUp={true}
+        />
       </div>
 
-      {/* Alerts & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card title="Recent Alerts" subtitle="System notifications">
-          <div className="space-y-3">
-            {alerts.map((alert) => (
-              <div
-                key={alert.id}
-                className={`p-3 rounded-md border-l-4 ${
-                  alert.type === 'warning'
-                    ? 'bg-yellow-50 dark:bg-yellow-900 border-yellow-400'
-                    : 'bg-blue-50 dark:bg-blue-900 border-blue-400'
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {alert.message}
-                  </p>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {alert.timestamp}
-                  </span>
+      <div className="bg-[#101828] rounded-lg shadow p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 text-white">Property Overview</h2>
+        <Table 
+          data={adminData.properties}
+          columns={propertyColumns}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Staff Distribution</h2>
+          <div className="space-y-4">
+            {adminData.properties.map((property) => (
+              <div key={property.id} className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{property.name}</div>
+                  <div className="text-sm text-gray-500">{property.staff} Staff Members</div>
+                </div>
+                <div className="text-sm font-medium text-blue-600">
+                  {((property.staff / adminData.overview.totalStaff) * 100).toFixed(0)}%
                 </div>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
 
-        <Card title="Quick Actions" subtitle="Common tasks">
-          <div className="grid grid-cols-2 gap-3">
-            <button className="p-3 text-left rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <div className="text-lg mb-1">🧹</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
-                Assign Housekeeping
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Performance Metrics</h2>
+          <div className="space-y-4">
+            {adminData.properties.map((property) => (
+              <div key={property.id} className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{property.name}</div>
+                  <div className="text-sm text-gray-500">
+                    Revenue: {property.revenue}
+                  </div>
+                </div>
+                <div>
+                  {getEfficiencyBadge(property.efficiency)}
+                </div>
               </div>
-            </button>
-            <button className="p-3 text-left rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <div className="text-lg mb-1">🔧</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
-                Create Maintenance
-              </div>
-            </button>
-            <button className="p-3 text-left rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <div className="text-lg mb-1">📊</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
-                View Reports
-              </div>
-            </button>
-            <button className="p-3 text-left rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <div className="text-lg mb-1">💬</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
-                Open Chat
-              </div>
-            </button>
+            ))}
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );
