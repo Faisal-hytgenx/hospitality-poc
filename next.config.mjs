@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true, // This will ignore ESLint errors during build
-  }
-};
+fixes    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
+  // Add runtime configuration
+  reactStrictMode: true,
+  swcMinify: true,
+}
 
 export default nextConfig;
