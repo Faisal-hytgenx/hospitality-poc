@@ -13,6 +13,14 @@ const users = [
     name: "Admin User"
   },
   {
+    id: "gm1",
+    username: "gm",
+    password: "gm123",
+    role: "gm",
+    name: "Sarah Johnson",
+    assignedProperty: "property2"
+  },
+  {
     id: "owner1",
     username: "owner",
     password: "owner123",
@@ -38,13 +46,16 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [currentRole, setCurrentRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check local storage for saved user
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const userInfo = JSON.parse(savedUser);
+      setUser(userInfo);
+      setCurrentRole(userInfo.role); // Set initial role
     }
     setLoading(false);
   }, []);
@@ -58,6 +69,7 @@ export const AuthProvider = ({ children }) => {
       const userInfo = { ...foundUser };
       delete userInfo.password; // Don't store password in state
       setUser(userInfo);
+      setCurrentRole(userInfo.role); // Set initial role
       localStorage.setItem('user', JSON.stringify(userInfo));
       return true;
     }
@@ -66,11 +78,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setCurrentRole(null);
     localStorage.removeItem('user');
   };
 
   const value = {
     user,
+    currentRole,
+    setCurrentRole,
     login,
     logout,
     loading

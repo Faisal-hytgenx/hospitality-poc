@@ -116,11 +116,19 @@ const mockMetrics = {
   }
 };
 
+// Helper mapping for property IDs to display names (keeps existing dummy data intact)
+const propertyIdToName = {
+  property1: 'Luxury Hotel Downtown',
+  property2: 'Resort & Spa',
+  property3: 'Business Hotel Central'
+};
+
 export default function OwnerDashboard() {
   const { user } = useAuth();
   const router = useRouter();
   const [staffMembers, setStaffMembers] = useState([]);
   const [propertyMetrics, setPropertyMetrics] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
   useEffect(() => {
     // Combine all staff and filter by owner's properties
@@ -129,10 +137,21 @@ export default function OwnerDashboard() {
       ...mockStaff.maintenance.map(s => ({ ...s, department: 'maintenance' }))
     ];
 
-    setStaffMembers(allStaff);
+    const ownerProperties = Array.isArray(user?.properties) ? user.properties : [];
+    const ownerPropertyNames = ownerProperties
+      .map((id) => propertyIdToName[id])
+      .filter(Boolean);
 
-    // Get metrics for first property (for demo)
-    setPropertyMetrics(mockMetrics['Luxury Hotel Downtown']);
+    const filteredStaff = ownerPropertyNames.length
+      ? allStaff.filter(s => ownerPropertyNames.includes(s.property))
+      : allStaff;
+
+    setStaffMembers(filteredStaff);
+
+    // Default selected property: first from owner's list or first available in data
+    const defaultProperty = ownerPropertyNames[0] || filteredStaff[0]?.property || 'Luxury Hotel Downtown';
+    setSelectedProperty(defaultProperty);
+    setPropertyMetrics(mockMetrics[defaultProperty] || null);
   }, [user]);
 
   const getStatusBadge = (available) => {
@@ -192,13 +211,64 @@ export default function OwnerDashboard() {
     }
   ];
 
-  const activeStaff = staffMembers.filter(s => s.available).length;
+  const staffForSelectedProperty = selectedProperty
+    ? staffMembers.filter(s => s.property === selectedProperty)
+    : staffMembers;
+
+  const activeStaff = staffForSelectedProperty.filter(s => s.available).length;
+
+  // Derive read-only tasks view from staff's currentTask
+  const tasksForSelectedProperty = staffForSelectedProperty
+    .filter(s => Boolean(s.currentTask))
+    .map((s, idx) => ({
+      id: `${s.id}-task-${idx}`,
+      task: s.currentTask,
+      staff: s.name,
+      department: s.department,
+      status: s.available ? 'Pending' : 'In Progress'
+    }));
+
+  const taskColumns = [
+    { key: 'task', label: 'Task' },
+    { key: 'staff', label: 'Staff' },
+    { key: 'department', label: 'Department', render: (v) => getDepartmentBadge(v) },
+    { key: 'status', label: 'Status', render: (v) => (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+        v === 'In Progress' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+      }`}>
+        {v}
+      </span>
+    ) }
+  ];
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Property Dashboard</h1>
       </div>
+
+      {/* Property selector for owners with multiple properties (read-only context) */}
+      {Array.isArray(user?.properties) && user.properties.length > 1 && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-100 mb-2">Select Property</label>
+          <select
+            className="w-full md:w-64 border rounded px-3 py-2"
+            value={selectedProperty || ''}
+            onChange={(e) => {
+              const prop = e.target.value;
+              setSelectedProperty(prop);
+              setPropertyMetrics(mockMetrics[prop] || null);
+            }}
+          >
+            {user.properties
+              .map((id) => propertyIdToName[id])
+              .filter(Boolean)
+              .map((propName) => (
+                <option key={propName} value={propName}>{propName}</option>
+              ))}
+          </select>
+        </div>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
@@ -234,13 +304,13 @@ export default function OwnerDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
           title="Total Staff" 
-          value={staffMembers.length}
+          value={staffForSelectedProperty.length}
           subtitle={`${propertyMetrics?.staffing?.departments?.housekeeping || 0} Housekeeping, ${propertyMetrics?.staffing?.departments?.maintenance || 0} Maintenance`}
         />
         <Card 
           title="Available Now" 
           value={activeStaff}
-          subtitle={`${((activeStaff/staffMembers.length) * 100).toFixed(0)}% of total`}
+          subtitle={`${staffForSelectedProperty.length ? ((activeStaff/staffForSelectedProperty.length) * 100).toFixed(0) : 0}% of total`}
         />
         <Card 
           title="Tasks Today" 
@@ -254,12 +324,22 @@ export default function OwnerDashboard() {
         />
       </div>
 
-      <div className="bg-[#101828] rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4 text-white">Staff Overview</h2>
-        <Table 
-          data={staffMembers}
-          columns={columns}
-        />
+      <div className="space-y-6">
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">Staff Overview</h2>
+          <Table 
+            data={staffForSelectedProperty}
+            columns={columns}
+          />
+        </div>
+
+        <div className="bg-[#101828] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">Current Tasks</h2>
+          <Table 
+            data={tasksForSelectedProperty}
+            columns={taskColumns}
+          />
+        </div>
       </div>
     </div>
   );

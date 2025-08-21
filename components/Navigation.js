@@ -16,6 +16,17 @@ const adminNavItems = [
   { href: '/settings', label: 'Settings' }
 ];
 
+const gmNavItems = [
+  { href: '/gm', label: 'Dashboard' },
+  { href: '/gm/assign-tasks', label: 'Assign Tasks' },
+  { href: '/housekeeping', label: 'Housekeeping' },
+  { href: '/maintenance', label: 'Maintenance' },
+  { href: '/revenue', label: 'Revenue' },
+  { href: '/chat', label: 'Chat' },
+  { href: '/tasks', label: 'Tasks' },
+  { href: '/settings', label: 'Settings' }
+];
+
 const ownerNavItems = [
   { href: '/owner-dashboard', label: 'Dashboard' },
   { href: '/owner-dashboard/staff', label: 'Staff Overview' }
@@ -42,6 +53,8 @@ export default function Navigation() {
   // Get navigation items based on user role
   const navItems = user?.role === 'admin' 
     ? adminNavItems 
+    : user?.role === 'gm'
+    ? gmNavItems
     : user?.role === 'owner'
     ? ownerNavItems
     : staffNavItems;
@@ -52,6 +65,7 @@ export default function Navigation() {
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             {user?.role === 'admin' ? 'Admin Panel' :
+             user?.role === 'gm' ? 'General Manager Panel' :
              user?.role === 'owner' ? 'Owner Panel' : 'Staff Panel'}
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -59,7 +73,7 @@ export default function Navigation() {
           </p>
         </div>
 
-        {user?.role === 'admin' && (
+        {/* {user?.role === 'admin' && (
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Select Property
@@ -92,7 +106,7 @@ export default function Navigation() {
               )}
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="flex-1 overflow-y-auto p-4">
           <ul className="space-y-2">

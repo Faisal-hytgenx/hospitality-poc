@@ -7,12 +7,14 @@ import { useRouter, usePathname } from 'next/navigation';
 // Define route access by role
 const routeAccess = {
   '/': ['admin'],
-  '/housekeeping': ['admin'],
-  '/maintenance': ['admin'],
-  '/revenue': ['admin'],
-  '/chat': ['admin'],
-  '/tasks': ['admin'],
-  '/settings': ['admin'],
+  '/housekeeping': ['admin', 'gm'],
+  '/maintenance': ['admin', 'gm'],
+  '/revenue': ['admin', 'gm'],
+  '/chat': ['admin', 'gm'],
+  '/tasks': ['admin', 'gm'],
+  '/settings': ['admin', 'gm'],
+  '/gm': ['gm'],
+  '/gm/assign-tasks': ['gm'],
   '/owner-dashboard': ['owner'],
   '/owner-dashboard/staff': ['owner'],
   '/staff-dashboard': ['staff'],
@@ -37,6 +39,9 @@ export default function ProtectedRoute({ children }) {
           switch (user.role) {
             case 'admin':
               router.push('/');
+              break;
+            case 'gm':
+              router.push('/gm');
               break;
             case 'owner':
               router.push('/owner-dashboard');

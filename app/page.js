@@ -22,7 +22,9 @@ const adminData = {
       occupancy: '87%',
       efficiency: 96,
       revenue: '$124,500',
-      tasks: { total: 45, completed: 42 }
+      tasks: { total: 45, completed: 42 },
+      assignedGM: 'Michael Chen',
+      assignedStaff: 25
     },
     {
       id: 'property2',
@@ -31,7 +33,9 @@ const adminData = {
       occupancy: '92%',
       efficiency: 98,
       revenue: '$156,800',
-      tasks: { total: 60, completed: 57 }
+      tasks: { total: 60, completed: 57 },
+      assignedGM: 'Sarah Johnson',
+      assignedStaff: 35
     },
     {
       id: 'property3',
@@ -40,13 +44,193 @@ const adminData = {
       occupancy: '85%',
       efficiency: 94,
       revenue: '$98,300',
-      tasks: { total: 35, completed: 32 }
+      tasks: { total: 35, completed: 32 },
+      assignedGM: null,
+      assignedStaff: 20
+    }
+  ],
+  // All tasks across all properties
+  allTasks: [
+    {
+      id: 'task-1',
+      title: 'Room 301 Cleaning',
+      property: 'Luxury Hotel Downtown',
+      propertyId: 'property1',
+      department: 'housekeeping',
+      priority: 'high',
+      status: 'in-progress',
+      assignedTo: 'Alex Johnson',
+      dueDate: '2024-01-15',
+      estimatedTime: '30 min'
+    },
+    {
+      id: 'task-2',
+      title: 'HVAC Maintenance - Floor 2',
+      property: 'Resort & Spa',
+      propertyId: 'property2',
+      department: 'maintenance',
+      priority: 'medium',
+      status: 'pending',
+      assignedTo: null,
+      dueDate: '2024-01-16',
+      estimatedTime: '2 hours'
+    },
+    {
+      id: 'task-3',
+      title: 'Guest Check-in Assistance',
+      property: 'Business Hotel Central',
+      propertyId: 'property3',
+      department: 'front-desk',
+      priority: 'high',
+      status: 'completed',
+      assignedTo: 'Casey Lee',
+      dueDate: '2024-01-14',
+      estimatedTime: '15 min'
+    },
+    {
+      id: 'task-4',
+      title: 'Deep Cleaning - Suite 105',
+      property: 'Resort & Spa',
+      propertyId: 'property2',
+      department: 'housekeeping',
+      priority: 'medium',
+      status: 'in-progress',
+      assignedTo: 'Taylor Brown',
+      dueDate: '2024-01-15',
+      estimatedTime: '3 hours'
+    },
+    {
+      id: 'task-5',
+      title: 'Plumbing Repair - Room 402',
+      property: 'Luxury Hotel Downtown',
+      propertyId: 'property1',
+      department: 'maintenance',
+      priority: 'high',
+      status: 'pending',
+      assignedTo: null,
+      dueDate: '2024-01-15',
+      estimatedTime: '1 hour'
+    },
+    {
+      id: 'task-6',
+      title: 'Inventory Restocking',
+      property: 'Business Hotel Central',
+      propertyId: 'property3',
+      department: 'housekeeping',
+      priority: 'low',
+      status: 'pending',
+      assignedTo: null,
+      dueDate: '2024-01-17',
+      estimatedTime: '45 min'
+    }
+  ],
+  // Available staff for assignment
+  availableStaff: [
+    {
+      id: 'staff-1',
+      name: 'Alex Johnson',
+      department: 'housekeeping',
+      position: 'Senior Housekeeper',
+      currentProperty: 'Luxury Hotel Downtown',
+      status: 'available',
+      skills: ['Room Cleaning', 'Deep Clean', 'Laundry'],
+      efficiency: 98
+    },
+    {
+      id: 'staff-2',
+      name: 'Jamie Smith',
+      department: 'housekeeping',
+      position: 'Housekeeper',
+      currentProperty: 'Resort & Spa',
+      status: 'available',
+      skills: ['Deep Clean', 'Inventory'],
+      efficiency: 95
+    },
+    {
+      id: 'staff-3',
+      name: 'Taylor Brown',
+      department: 'housekeeping',
+      position: 'Housekeeper',
+      currentProperty: 'Resort & Spa',
+      status: 'busy',
+      skills: ['Room Cleaning', 'Maintenance'],
+      efficiency: 94
+    },
+    {
+      id: 'staff-4',
+      name: 'Riley Wilson',
+      department: 'maintenance',
+      position: 'Maintenance Technician',
+      currentProperty: 'Resort & Spa',
+      status: 'available',
+      skills: ['HVAC', 'Electrical'],
+      efficiency: 97
+    },
+    {
+      id: 'staff-5',
+      name: 'Sam Davis',
+      department: 'maintenance',
+      position: 'Plumber',
+      currentProperty: 'Luxury Hotel Downtown',
+      status: 'available',
+      skills: ['Plumbing', 'General Repairs'],
+      efficiency: 96
+    },
+    {
+      id: 'staff-6',
+      name: 'Casey Lee',
+      department: 'front-desk',
+      position: 'Front Desk Manager',
+      currentProperty: 'Business Hotel Central',
+      status: 'available',
+      skills: ['Customer Service', 'Reservations'],
+      efficiency: 99
+    }
+  ],
+  // Available General Managers
+  availableGMs: [
+    {
+      id: 'gm-1',
+      name: 'Sarah Johnson',
+      currentProperty: 'Resort & Spa',
+      experience: '8 years',
+      rating: 4.9,
+      status: 'assigned'
+    },
+    {
+      id: 'gm-2',
+      name: 'Michael Chen',
+      currentProperty: 'Luxury Hotel Downtown',
+      experience: '6 years',
+      rating: 4.8,
+      status: 'assigned'
+    },
+    {
+      id: 'gm-3',
+      name: 'David Rodriguez',
+      currentProperty: null,
+      experience: '5 years',
+      rating: 4.7,
+      status: 'available'
+    },
+    {
+      id: 'gm-4',
+      name: 'Lisa Thompson',
+      currentProperty: null,
+      experience: '7 years',
+      rating: 4.9,
+      status: 'available'
     }
   ]
 };
 
 export default function AdminDashboard() {
   const [selectedProperty, setSelectedProperty] = useState(adminData.properties[0]);
+  const [viewMode, setViewMode] = useState('overview'); // 'overview', 'tasks', 'property-detail'
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showTaskAssignment, setShowTaskAssignment] = useState(false);
+  const [showStaffAssignment, setShowStaffAssignment] = useState(false);
+  const [showGMAssignment, setShowGMAssignment] = useState(false);
 
   const getEfficiencyBadge = (value) => {
     const styles = {
@@ -58,6 +242,32 @@ export default function AdminDashboard() {
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[level]}`}>
         {value}%
+      </span>
+    );
+  };
+
+  const getPriorityBadge = (priority) => {
+    const styles = {
+      high: 'bg-red-100 text-red-800',
+      medium: 'bg-yellow-100 text-yellow-800',
+      low: 'bg-green-100 text-green-800'
+    };
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[priority]}`}>
+        {priority.charAt(0).toUpperCase() + priority.slice(1)}
+      </span>
+    );
+  };
+
+  const getStatusBadge = (status) => {
+    const styles = {
+      'in-progress': 'bg-blue-100 text-blue-800',
+      'pending': 'bg-yellow-100 text-yellow-800',
+      'completed': 'bg-green-100 text-green-800'
+    };
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
   };
@@ -85,15 +295,126 @@ export default function AdminDashboard() {
       key: 'tasks',
       label: 'Tasks',
       render: (value) => `${value.completed}/${value.total}`
+    },
+    {
+      key: 'assignedGM',
+      label: 'General Manager',
+      render: (value) => value || 'Unassigned'
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: (value, row) => (
+        <div className="flex space-x-2">
+          <button
+            onClick={() => {
+              setSelectedProperty(row);
+              setViewMode('property-detail');
+            }}
+            className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+          >
+            View Details
+          </button>
+          <button
+            onClick={() => {
+              setSelectedProperty(row);
+              setShowStaffAssignment(true);
+            }}
+            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+          >
+            Send Staff
+          </button>
+        </div>
+      )
     }
   ];
 
-  return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      </div>
+  const taskColumns = [
+    {
+      key: 'title',
+      label: 'Task'
+    },
+    {
+      key: 'property',
+      label: 'Property'
+    },
+    {
+      key: 'department',
+      label: 'Department'
+    },
+    {
+      key: 'priority',
+      label: 'Priority',
+      render: (value) => getPriorityBadge(value)
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => getStatusBadge(value)
+    },
+    {
+      key: 'assignedTo',
+      label: 'Assigned To',
+      render: (value) => value || 'Unassigned'
+    },
+    {
+      key: 'dueDate',
+      label: 'Due Date'
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: (value, row) => (
+        <button
+          onClick={() => {
+            setSelectedTask(row);
+            setShowTaskAssignment(true);
+          }}
+          className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+        >
+          Assign Staff
+        </button>
+      )
+    }
+  ];
 
+  const staffColumns = [
+    {
+      key: 'name',
+      label: 'Staff Member'
+    },
+    {
+      key: 'department',
+      label: 'Department'
+    },
+    {
+      key: 'position',
+      label: 'Position'
+    },
+    {
+      key: 'currentProperty',
+      label: 'Current Property'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => (
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+          value === 'available' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+        }`}>
+          {value.charAt(0).toUpperCase() + value.slice(1)}
+        </span>
+      )
+    },
+    {
+      key: 'efficiency',
+      label: 'Efficiency',
+      render: (value) => getEfficiencyBadge(value)
+    }
+  ];
+
+  const renderOverview = () => (
+    <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card 
           title="Total Staff" 
@@ -185,6 +506,240 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+    </>
+  );
+
+  const renderTasksView = () => (
+    <div className="bg-[#101828] rounded-lg shadow p-6">
+      <h2 className="text-xl font-semibold mb-4 text-white">All Tasks Across Properties</h2>
+      <Table 
+        data={adminData.allTasks}
+        columns={taskColumns}
+      />
+    </div>
+  );
+
+  const renderPropertyDetail = () => {
+    const propertyTasks = adminData.allTasks.filter(task => task.propertyId === selectedProperty.id);
+    const propertyStaff = adminData.availableStaff.filter(staff => staff.currentProperty === selectedProperty.name);
+
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold">{selectedProperty.name}</h2>
+            <p className="text-gray-100">Property Management Dashboard</p>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              // onClick={() => setShowGMAssignment(true)}
+              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+            >
+              Assign New Manager
+            </button>
+            <button
+              onClick={() => setViewMode('overview')}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Back to Overview
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card 
+            title="Total Staff" 
+            value={selectedProperty.staff}
+            subtitle="Assigned to Property"
+          />
+          <Card 
+            title="Occupancy" 
+            value={selectedProperty.occupancy}
+            subtitle="Current Rate"
+          />
+          <Card 
+            title="Efficiency" 
+            value={`${selectedProperty.efficiency}%`}
+            subtitle="Property Average"
+          />
+          <Card 
+            title="Revenue" 
+            value={selectedProperty.revenue}
+            subtitle="This Month"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-[#101828] rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 text-white">Assigned Staff</h3>
+            <Table 
+              data={propertyStaff}
+              columns={staffColumns}
+            />
+          </div>
+
+          <div className="bg-[#101828] rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 text-white">Property Tasks</h3>
+            <Table 
+              data={propertyTasks}
+              columns={taskColumns}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => setViewMode('overview')}
+            className={`px-4 py-2 rounded ${viewMode === 'overview' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setViewMode('tasks')}
+            className={`px-4 py-2 rounded ${viewMode === 'tasks' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+          >
+            All Tasks
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'overview' && renderOverview()}
+      {viewMode === 'tasks' && renderTasksView()}
+      {viewMode === 'property-detail' && renderPropertyDetail()}
+
+      {/* Task Assignment Modal */}
+      {showTaskAssignment && selectedTask && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#101828] rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Assign Staff to Task</h3>
+            <p className="mb-4"><strong>Task:</strong> {selectedTask.title}</p>
+            <p className="mb-4"><strong>Property:</strong> {selectedTask.property}</p>
+            
+            <div className="mb-4">
+              <label className="block text-white text-sm font-medium mb-2">Select Staff Member:</label>
+              <select className="w-full bg-[#101828] border rounded px-3 py-2">
+                <option value="">Choose staff member...</option>
+                {adminData.availableStaff
+                  .filter(staff => staff.currentProperty === selectedTask.property && staff.status === 'available')
+                  .map(staff => (
+                    <option key={staff.id} value={staff.id}>{staff.name} - {staff.position}</option>
+                  ))
+                }
+              </select>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <button
+                // onClick={() => setShowTaskAssignment(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  // Dummy action - update UI
+                  setShowTaskAssignment(false);
+                  alert('Staff assigned to task successfully!');
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Staff Assignment Modal */}
+      {showStaffAssignment && selectedProperty && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#101828] rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Send Staff to Property</h3>
+            <p className="mb-4"><strong>Property:</strong> {selectedProperty.name}</p>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Select Staff Member:</label>
+              <select className="w-full bg-[#101828] border rounded px-3 py-2">
+                <option value="">Choose staff member...</option>
+                {adminData.availableStaff
+                  .filter(staff => staff.status === 'available')
+                  .map(staff => (
+                    <option key={staff.id} value={staff.id}>{staff.name} - {staff.position}</option>
+                  ))
+                }
+              </select>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowStaffAssignment(false)}
+                className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  // Dummy action - update UI
+                  setShowStaffAssignment(false);
+                  alert('Staff sent to property successfully!');
+                }}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Send Staff
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GM Assignment Modal */}
+      {showGMAssignment && selectedProperty && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Assign General Manager</h3>
+            <p className="mb-4"><strong>Property:</strong> {selectedProperty.name}</p>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Select General Manager:</label>
+              <select className="w-full border rounded px-3 py-2">
+                <option value="">Choose GM...</option>
+                {adminData.availableGMs
+                  .filter(gm => gm.status === 'available')
+                  .map(gm => (
+                    <option key={gm.id} value={gm.id}>{gm.name} - {gm.experience} experience</option>
+                  ))
+                }
+              </select>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowGMAssignment(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  // Dummy action - update UI
+                  setShowGMAssignment(false);
+                  alert('General Manager assigned to property successfully!');
+                }}
+                className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+              >
+                Assign GM
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

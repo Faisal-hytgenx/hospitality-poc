@@ -20,6 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  
   return (
     <html lang="en">
       <body
@@ -29,7 +31,7 @@ export default function RootLayout({ children }) {
         <AppProvider>
           <AuthProvider>
             <ProtectedRoute>
-              {usePathname() === '/login' ? (
+              {pathname === '/login' ? (
                 <main className="w-full">
                   {children}
                 </main>

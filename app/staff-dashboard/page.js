@@ -1,4 +1,4 @@
-{`'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
@@ -124,8 +124,8 @@ export default function StaffDashboard() {
     };
 
     return (
-      <span className={\`px-2 py-1 rounded-full text-xs font-medium \${styles[status] || styles.pending}\`}>
-        {status.replace("-", " ").replace(/\\b\\w/g, l => l.toUpperCase())}
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status] || styles.pending}`}>
+        {status.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
       </span>
     );
   };
@@ -138,7 +138,7 @@ export default function StaffDashboard() {
     };
 
     return (
-      <span className={\`px-2 py-1 rounded-full text-xs font-medium \${styles[priority] || styles.medium}\`}>
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[priority] || styles.medium}`}>
         {priority.charAt(0).toUpperCase() + priority.slice(1)}
       </span>
     );
@@ -180,33 +180,34 @@ export default function StaffDashboard() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Staff Dashboard</h1>
+        <h1 className="text-lg "><span className="font-bold">Property:</span> Luxury Hotel Downtown</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
           title="Performance Score" 
-          value={\`\${performance?.efficiency || 0}%\`}
+          value={`${performance?.efficiency || 0}%`}
           subtitle="Overall Efficiency"
           trend="+2.5%"
           trendUp={true}
         />
         <Card 
           title="Task Completion" 
-          value={\`\${((performance?.tasksCompleted / performance?.monthlyTarget) * 100).toFixed(0)}%\`}
-          subtitle={\`\${performance?.tasksCompleted || 0} of \${performance?.monthlyTarget || 0} Tasks\`}
+          value={`${((performance?.tasksCompleted / performance?.monthlyTarget) * 100).toFixed(0)}%`}
+          subtitle={`${performance?.tasksCompleted || 0} of ${performance?.monthlyTarget || 0} Tasks`}
           trend="+5.8%"
           trendUp={true}
         />
         <Card 
           title="Customer Rating" 
-          value={\`\${performance?.rating || 0} ★\`}
-          subtitle={\`\${performance?.positiveReviews || 0} Positive Reviews\`}
+          value={`${performance?.rating || 0} ★`}
+          subtitle={`${performance?.positiveReviews || 0} Positive Reviews`}
           trend="+0.2"
           trendUp={true}
         />
         <Card 
           title="Attendance Streak" 
-          value={\`\${performance?.currentStreak || 0} Days\`}
+          value={`${performance?.currentStreak || 0} Days`}
           subtitle="Perfect Attendance"
           trend="+3 days"
           trendUp={true}
@@ -245,4 +246,4 @@ export default function StaffDashboard() {
       </div>
     </div>
   );
-}`}
+}

@@ -17,17 +17,27 @@ export default function Login() {
     
     if (success) {
       const user = JSON.parse(localStorage.getItem('user'));
+      console.log('User logged in:', user); // Debug log
+      
       switch (user.role) {
         case 'admin':
+          console.log('Routing to admin dashboard');
           router.push('/');
           break;
+        case 'gm':
+          console.log('Routing to GM dashboard');
+          router.replace('/gm');
+          break;
         case 'owner':
+          console.log('Routing to owner dashboard');
           router.push('/owner-dashboard');
           break;
         case 'staff':
+          console.log('Routing to staff dashboard');
           router.push('/staff-dashboard');
           break;
         default:
+          console.log('Routing to default dashboard');
           router.push('/');
       }
     } else {
@@ -84,6 +94,14 @@ export default function Login() {
               <div className="text-sm text-gray-600">
                 Username: <span className="font-mono bg-gray-100 px-2 py-1 rounded">admin</span><br/>
                 Password: <span className="font-mono bg-gray-100 px-2 py-1 rounded">admin123</span>
+              </div>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="font-medium text-orange-600">General Manager Access</h3>
+              <div className="text-sm text-gray-600">
+                Username: <span className="font-mono bg-gray-100 px-2 py-1 rounded">gm</span><br/>
+                Password: <span className="font-mono bg-gray-100 px-2 py-1 rounded">gm123</span>
               </div>
             </div>
 
