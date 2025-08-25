@@ -18,12 +18,16 @@ export default function ChatPage() {
   useEffect(() => {
     setIsClient(true);
     setMessages([
-      {
-        id: 1,
-        type: 'bot',
-       content: "Hello! I&apos;m your hospitality assistant. I can help you with housekeeping status, maintenance requests, task assignments, and revenue analytics. What would you like to know?",
-        timestamp: new Date()
-      }
+      { id: 1, type: 'bot', content: "Hello! I&apos;m your hospitality assistant. I can help with housekeeping, maintenance, assignments, and revenue analytics. What would you like to know?", timestamp: new Date() },
+      { id: 2, type: 'user', content: "Show today&apos;s housekeeping status", timestamp: new Date() },
+      { id: 3, type: 'bot', content: "Today: 12 rooms pending, 3 require maintenance. Avg cleaning time: 42 mins.", timestamp: new Date() },
+      { id: 4, type: 'user', content: "Any open maintenance requests?", timestamp: new Date() },
+      { id: 5, type: 'bot', content: "We have 4 open requests. Top priority: HVAC check in Room 202 and shower leak in 118.", timestamp: new Date() },
+      { id: 6, type: 'user', content: "Assign cleaning for Room 305", timestamp: new Date() },
+      { id: 7, type: 'bot', content: "Sure — opening the Unified Task Board to assign a housekeeper.", timestamp: new Date(), action: { type: 'navigate', path: '/tasks' } },
+      { id: 8, type: 'user', content: "What&apos;s the current occupancy and RevPAR?", timestamp: new Date() },
+      { id: 9, type: 'bot', content: "Occupancy is 87% and RevPAR is $169. Revenue is trending +12.5% in the last 30 days.", timestamp: new Date() },
+      { id: 10, type: 'bot', content: "Tip: Try ‘Remind maintenance to check HVAC in Room 202’ to set a note.", timestamp: new Date() }
     ]);
   }, []);
 

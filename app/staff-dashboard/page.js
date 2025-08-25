@@ -15,7 +15,7 @@ const mockTasks = {
       status: "pending",
       priority: "high",
       dueTime: "2:00 PM",
-      property: "Luxury Hotel Downtown",
+      property: "Hyatt Place San Antonio NW Medical Center",
       description: "Full room cleaning and sanitization",
       location: "Floor 3"
     },
@@ -25,7 +25,7 @@ const mockTasks = {
       status: "in-progress",
       priority: "medium",
       dueTime: "3:30 PM",
-      property: "Luxury Hotel Downtown",
+      property: "Hyatt Place San Antonio NW Medical Center",
       description: "Restock cleaning supplies in storage",
       location: "Storage Room"
     },
@@ -35,7 +35,7 @@ const mockTasks = {
       status: "completed",
       priority: "high",
       dueTime: "12:00 PM",
-      property: "Luxury Hotel Downtown",
+      property: "Holiday Inn San Antonio NW",
       description: "Deep cleaning after guest checkout",
       location: "Floor 2"
     }
@@ -47,7 +47,7 @@ const mockTasks = {
       status: "pending",
       priority: "high",
       dueTime: "1:00 PM",
-      property: "Resort & Spa",
+      property: "Holiday Inn San Antonio NW",
       description: "AC not cooling properly",
       location: "Floor 2"
     },
@@ -57,7 +57,7 @@ const mockTasks = {
       status: "in-progress",
       priority: "medium",
       dueTime: "4:30 PM",
-      property: "Resort & Spa",
+      property: "Holiday Inn San Antonio NW",
       description: "Routine plumbing inspection",
       location: "All Floors"
     }

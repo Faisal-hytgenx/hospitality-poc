@@ -151,7 +151,7 @@ export default function RevenuePage() {
 
       {/* Market Position */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-[#101828] rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Competitive Analysis</h2>
           <Table 
             data={revenueData.competitiveAnalysis.competitors}
@@ -159,7 +159,7 @@ export default function RevenuePage() {
           />
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-[#101828] rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Booking Channel Distribution</h2>
           <Table 
             data={revenueData.bookingPatterns.channelDistribution}
@@ -169,24 +169,24 @@ export default function RevenuePage() {
       </div>
 
       {/* Revenue Goals */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-[#101828] rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">2025 Revenue Goals</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <p className="text-gray-600 mb-2">Yearly Target: ${(revenueData.revenueGoals.yearly.target/1000000).toFixed(1)}M</p>
+            <p className="text-white mb-2">Yearly Target: ${(revenueData.revenueGoals.yearly.target/1000000).toFixed(1)}M</p>
             <div className="mb-4">
               {getProgressBar(
                 revenueData.revenueGoals.yearly.current,
                 revenueData.revenueGoals.yearly.target
               )}
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-300 mt-1">
                 Progress: {revenueData.revenueGoals.yearly.progress}%
               </p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {Object.entries(revenueData.revenueGoals.keyMetrics).map(([key, value]) => (
-              <div key={key} className="bg-gray-50 p-4 rounded-lg">
+              <div key={key} className="bg-[#101828] p-4 rounded-lg">
                 <p className="text-sm text-gray-600">{key.toUpperCase()}</p>
                 <p className="text-xl font-semibold">
                   {key === 'avgDailyRate' ? '$' : ''}{value.current}

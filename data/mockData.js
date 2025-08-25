@@ -7,7 +7,8 @@ export const mockStaff = {
       name: 'Alex Johnson', 
       skills: ['Room Cleaning', 'Deep Clean', 'Laundry'],
       available: true, 
-      property: 'property1',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       currentLocation: 'Floor 3',
       tasksCompleted: 145,
       rating: 4.8,
@@ -22,7 +23,8 @@ export const mockStaff = {
       name: 'Jamie Smith', 
       skills: ['Deep Clean', 'Inventory Management'],
       available: true, 
-      property: 'property2',
+      property: 'holiday-inn-san-antonio-nw',
+      propertyName: 'Holiday Inn San Antonio NW',
       currentLocation: 'Floor 2',
       tasksCompleted: 132,
       rating: 4.9,
@@ -37,7 +39,8 @@ export const mockStaff = {
       name: 'Taylor Brown', 
       skills: ['Room Cleaning', 'Maintenance Support'],
       available: false, 
-      property: 'property1',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       currentLocation: 'Floor 1',
       tasksCompleted: 128,
       rating: 4.7,
@@ -54,7 +57,8 @@ export const mockStaff = {
       name: 'Riley Wilson', 
       skills: ['HVAC', 'Electrical'],
       available: true, 
-      property: 'property2',
+      property: 'holiday-inn-san-antonio-nw',
+      propertyName: 'Holiday Inn San Antonio NW',
       currentLocation: 'Basement',
       tasksCompleted: 89,
       rating: 4.9,
@@ -69,7 +73,8 @@ export const mockStaff = {
       name: 'Sam Davis', 
       skills: ['Plumbing', 'General Repairs'],
       available: false, 
-      property: 'property1',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       currentLocation: 'Floor 4',
       tasksCompleted: 93,
       rating: 4.8,
@@ -90,13 +95,16 @@ export const mockTasks = {
       status: 'pending',
       priority: 'high',
       dueTime: '2:00 PM',
-      property: 'property1',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       description: 'Full room cleaning and sanitization',
       assignedAt: '2024-01-20T10:00:00',
       estimatedDuration: '45 mins',
       notes: 'VIP guest arriving today',
       type: 'room-cleaning',
-      location: 'Floor 3'
+      location: 'Floor 3',
+      assignedTo: null,
+      assignedToId: null
     },
     {
       id: 2,
@@ -104,12 +112,15 @@ export const mockTasks = {
       status: 'in-progress',
       priority: 'medium',
       dueTime: '3:30 PM',
-      property: 'property1',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       description: 'Restock cleaning supplies in storage',
       assignedAt: '2024-01-20T09:00:00',
       estimatedDuration: '30 mins',
       type: 'restocking',
-      location: 'Storage Room'
+      location: 'Storage Room',
+      assignedTo: 'Alex Johnson',
+      assignedToId: 'hk-1'
     },
     {
       id: 3,
@@ -117,12 +128,15 @@ export const mockTasks = {
       status: 'completed',
       priority: 'high',
       dueTime: '12:00 PM',
-      property: 'property1',
+      property: 'holiday-inn-san-antonio-nw',
+      propertyName: 'Holiday Inn San Antonio NW',
       description: 'Deep cleaning after guest checkout',
       assignedAt: '2024-01-20T08:00:00',
       completedAt: '2024-01-20T11:45:00',
       type: 'deep-clean',
-      location: 'Floor 2'
+      location: 'Floor 2',
+      assignedTo: 'Jamie Smith',
+      assignedToId: 'hk-2'
     }
   ],
   maintenance: [
@@ -132,13 +146,16 @@ export const mockTasks = {
       status: 'pending',
       priority: 'high',
       dueTime: '1:00 PM',
-      property: 'property2',
+      property: 'holiday-inn-san-antonio-nw',
+      propertyName: 'Holiday Inn San Antonio NW',
       description: 'AC not cooling properly',
       assignedAt: '2024-01-20T10:30:00',
       estimatedDuration: '60 mins',
       type: 'repair',
       equipment: ['toolbox', 'ladder'],
-      location: 'Floor 2'
+      location: 'Floor 2',
+      assignedTo: null,
+      assignedToId: null
     },
     {
       id: 2,
@@ -146,12 +163,15 @@ export const mockTasks = {
       status: 'in-progress',
       priority: 'medium',
       dueTime: '4:30 PM',
-      property: 'property2',
+      property: 'holiday-inn-san-antonio-nw',
+      propertyName: 'Holiday Inn San Antonio NW',
       description: 'Routine plumbing inspection',
       assignedAt: '2024-01-20T09:30:00',
       estimatedDuration: '90 mins',
       type: 'inspection',
-      location: 'All Floors'
+      location: 'All Floors',
+      assignedTo: 'Riley Wilson',
+      assignedToId: 'mt-1'
     },
     {
       id: 3,
@@ -159,12 +179,15 @@ export const mockTasks = {
       status: 'completed',
       priority: 'low',
       dueTime: '11:00 AM',
-      property: 'property2',
+      property: 'hyatt-san-antonio-nw',
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
       description: 'Replace old light fixtures in hallway',
       assignedAt: '2024-01-20T09:00:00',
       completedAt: '2024-01-20T10:30:00',
       type: 'replacement',
-      location: 'Floor 1 Hallway'
+      location: 'Floor 1 Hallway',
+      assignedTo: 'Sam Davis',
+      assignedToId: 'mt-2'
     }
   ]
 };
@@ -205,9 +228,9 @@ export const mockPerformance = {
 };
 
 export const mockProperties = {
-  property1: {
-    name: 'Luxury Hotel Downtown',
-    rooms: 150,
+  'hyatt-san-antonio-nw': {
+    name: 'Hyatt Place San Antonio NW Medical Center',
+    rooms: 120,
     staff: 25,
     occupancyRate: '87%',
     revenue: '$124,500',
@@ -226,24 +249,45 @@ export const mockProperties = {
       }
     }
   },
-  property2: {
-    name: 'Resort & Spa',
-    rooms: 200,
-    staff: 35,
+  'holiday-inn-san-antonio-nw': {
+    name: 'Holiday Inn San Antonio NW',
+    rooms: 100,
+    staff: 20,
     occupancyRate: '92%',
-    revenue: '$156,800',
+    revenue: '$98,300',
     guestSatisfaction: 4.9,
     taskCompletion: '98%',
     departments: {
       housekeeping: {
-        staff: 20,
-        tasksToday: 60,
+        staff: 12,
+        tasksToday: 35,
         completionRate: '95%'
       },
       maintenance: {
-        staff: 15,
-        tasksToday: 18,
+        staff: 8,
+        tasksToday: 8,
         completionRate: '96%'
+      }
+    }
+  },
+  'holiday-inn-stone-oak': {
+    name: 'Holiday Inn San Antonio Stone Oak Area',
+    rooms: 110,
+    staff: 22,
+    occupancyRate: '85%',
+    revenue: '$156,800',
+    guestSatisfaction: 4.7,
+    taskCompletion: '94%',
+    departments: {
+      housekeeping: {
+        staff: 13,
+        tasksToday: 40,
+        completionRate: '93%'
+      },
+      maintenance: {
+        staff: 9,
+        tasksToday: 10,
+        completionRate: '91%'
       }
     }
   }

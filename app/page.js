@@ -16,8 +16,8 @@ const adminData = {
   },
   properties: [
     {
-      id: 'property1',
-      name: 'Luxury Hotel Downtown',
+      id: 'hyatt-san-antonio-nw',
+      name: 'Hyatt Place San Antonio NW Medical Center',
       staff: 25,
       occupancy: '87%',
       efficiency: 96,
@@ -27,26 +27,26 @@ const adminData = {
       assignedStaff: 25
     },
     {
-      id: 'property2',
-      name: 'Resort & Spa',
-      staff: 35,
+      id: 'holiday-inn-san-antonio-nw',
+      name: 'Holiday Inn San Antonio NW',
+      staff: 20,
       occupancy: '92%',
       efficiency: 98,
-      revenue: '$156,800',
-      tasks: { total: 60, completed: 57 },
-      assignedGM: 'Sarah Johnson',
-      assignedStaff: 35
-    },
-    {
-      id: 'property3',
-      name: 'Business Hotel Central',
-      staff: 20,
-      occupancy: '85%',
-      efficiency: 94,
       revenue: '$98,300',
       tasks: { total: 35, completed: 32 },
-      assignedGM: null,
+      assignedGM: 'Sarah Johnson',
       assignedStaff: 20
+    },
+    {
+      id: 'holiday-inn-stone-oak',
+      name: 'Holiday Inn San Antonio Stone Oak Area',
+      staff: 22,
+      occupancy: '85%',
+      efficiency: 94,
+      revenue: '$156,800',
+      tasks: { total: 40, completed: 38 },
+      assignedGM: null,
+      assignedStaff: 22
     }
   ],
   // All tasks across all properties
@@ -54,8 +54,8 @@ const adminData = {
     {
       id: 'task-1',
       title: 'Room 301 Cleaning',
-      property: 'Luxury Hotel Downtown',
-      propertyId: 'property1',
+      property: 'Hyatt Place San Antonio NW Medical Center',
+      propertyId: 'hyatt-san-antonio-nw',
       department: 'housekeeping',
       priority: 'high',
       status: 'in-progress',
@@ -66,8 +66,8 @@ const adminData = {
     {
       id: 'task-2',
       title: 'HVAC Maintenance - Floor 2',
-      property: 'Resort & Spa',
-      propertyId: 'property2',
+      property: 'Holiday Inn San Antonio NW',
+      propertyId: 'holiday-inn-san-antonio-nw',
       department: 'maintenance',
       priority: 'medium',
       status: 'pending',
@@ -78,8 +78,8 @@ const adminData = {
     {
       id: 'task-3',
       title: 'Guest Check-in Assistance',
-      property: 'Business Hotel Central',
-      propertyId: 'property3',
+      property: 'Holiday Inn San Antonio Stone Oak Area',
+      propertyId: 'holiday-inn-stone-oak',
       department: 'front-desk',
       priority: 'high',
       status: 'completed',
@@ -90,8 +90,8 @@ const adminData = {
     {
       id: 'task-4',
       title: 'Deep Cleaning - Suite 105',
-      property: 'Resort & Spa',
-      propertyId: 'property2',
+      property: 'Holiday Inn San Antonio NW',
+      propertyId: 'holiday-inn-san-antonio-nw',
       department: 'housekeeping',
       priority: 'medium',
       status: 'in-progress',
@@ -102,8 +102,8 @@ const adminData = {
     {
       id: 'task-5',
       title: 'Plumbing Repair - Room 402',
-      property: 'Luxury Hotel Downtown',
-      propertyId: 'property1',
+      property: 'Hyatt Place San Antonio NW Medical Center',
+      propertyId: 'hyatt-san-antonio-nw',
       department: 'maintenance',
       priority: 'high',
       status: 'pending',
@@ -114,8 +114,8 @@ const adminData = {
     {
       id: 'task-6',
       title: 'Inventory Restocking',
-      property: 'Business Hotel Central',
-      propertyId: 'property3',
+      property: 'Holiday Inn San Antonio Stone Oak Area',
+      propertyId: 'holiday-inn-stone-oak',
       department: 'housekeeping',
       priority: 'low',
       status: 'pending',
@@ -131,7 +131,8 @@ const adminData = {
       name: 'Alex Johnson',
       department: 'housekeeping',
       position: 'Senior Housekeeper',
-      currentProperty: 'Luxury Hotel Downtown',
+      currentProperty: 'Hyatt Place San Antonio NW Medical Center',
+      currentPropertyId: 'hyatt-san-antonio-nw',
       status: 'available',
       skills: ['Room Cleaning', 'Deep Clean', 'Laundry'],
       efficiency: 98
@@ -141,7 +142,8 @@ const adminData = {
       name: 'Jamie Smith',
       department: 'housekeeping',
       position: 'Housekeeper',
-      currentProperty: 'Resort & Spa',
+      currentProperty: 'Holiday Inn San Antonio NW',
+      currentPropertyId: 'holiday-inn-san-antonio-nw',
       status: 'available',
       skills: ['Deep Clean', 'Inventory'],
       efficiency: 95
@@ -151,7 +153,8 @@ const adminData = {
       name: 'Taylor Brown',
       department: 'housekeeping',
       position: 'Housekeeper',
-      currentProperty: 'Resort & Spa',
+      currentProperty: 'Hyatt Place San Antonio NW Medical Center',
+      currentPropertyId: 'hyatt-san-antonio-nw',
       status: 'busy',
       skills: ['Room Cleaning', 'Maintenance'],
       efficiency: 94
@@ -161,7 +164,8 @@ const adminData = {
       name: 'Riley Wilson',
       department: 'maintenance',
       position: 'Maintenance Technician',
-      currentProperty: 'Resort & Spa',
+      currentProperty: 'Holiday Inn San Antonio NW',
+      currentPropertyId: 'holiday-inn-san-antonio-nw',
       status: 'available',
       skills: ['HVAC', 'Electrical'],
       efficiency: 97
@@ -171,7 +175,8 @@ const adminData = {
       name: 'Sam Davis',
       department: 'maintenance',
       position: 'Plumber',
-      currentProperty: 'Luxury Hotel Downtown',
+      currentProperty: 'Hyatt Place San Antonio NW Medical Center',
+      currentPropertyId: 'hyatt-san-antonio-nw',
       status: 'available',
       skills: ['Plumbing', 'General Repairs'],
       efficiency: 96
@@ -181,7 +186,8 @@ const adminData = {
       name: 'Casey Lee',
       department: 'front-desk',
       position: 'Front Desk Manager',
-      currentProperty: 'Business Hotel Central',
+      currentProperty: 'Holiday Inn San Antonio Stone Oak Area',
+      currentPropertyId: 'holiday-inn-stone-oak',
       status: 'available',
       skills: ['Customer Service', 'Reservations'],
       efficiency: 99
@@ -192,7 +198,8 @@ const adminData = {
     {
       id: 'gm-1',
       name: 'Sarah Johnson',
-      currentProperty: 'Resort & Spa',
+      currentProperty: 'Holiday Inn San Antonio NW',
+      currentPropertyId: 'holiday-inn-san-antonio-nw',
       experience: '8 years',
       rating: 4.9,
       status: 'assigned'
@@ -200,7 +207,8 @@ const adminData = {
     {
       id: 'gm-2',
       name: 'Michael Chen',
-      currentProperty: 'Luxury Hotel Downtown',
+      currentProperty: 'Hyatt Place San Antonio NW Medical Center',
+      currentPropertyId: 'hyatt-san-antonio-nw',
       experience: '6 years',
       rating: 4.8,
       status: 'assigned'
@@ -209,6 +217,7 @@ const adminData = {
       id: 'gm-3',
       name: 'David Rodriguez',
       currentProperty: null,
+      currentPropertyId: null,
       experience: '5 years',
       rating: 4.7,
       status: 'available'
@@ -217,6 +226,7 @@ const adminData = {
       id: 'gm-4',
       name: 'Lisa Thompson',
       currentProperty: null,
+      currentPropertyId: null,
       experience: '7 years',
       rating: 4.9,
       status: 'available'
@@ -231,6 +241,8 @@ export default function AdminDashboard() {
   const [showTaskAssignment, setShowTaskAssignment] = useState(false);
   const [showStaffAssignment, setShowStaffAssignment] = useState(false);
   const [showGMAssignment, setShowGMAssignment] = useState(false);
+  const [selectedStaffForTask, setSelectedStaffForTask] = useState('');
+  const [allTasks, setAllTasks] = useState(adminData.allTasks);
 
   const getEfficiencyBadge = (value) => {
     const styles = {
@@ -513,15 +525,15 @@ export default function AdminDashboard() {
     <div className="bg-[#101828] rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4 text-white">All Tasks Across Properties</h2>
       <Table 
-        data={adminData.allTasks}
+        data={allTasks}
         columns={taskColumns}
       />
     </div>
   );
 
   const renderPropertyDetail = () => {
-    const propertyTasks = adminData.allTasks.filter(task => task.propertyId === selectedProperty.id);
-    const propertyStaff = adminData.availableStaff.filter(staff => staff.currentProperty === selectedProperty.name);
+    const propertyTasks = allTasks.filter(task => task.propertyId === selectedProperty.id);
+    const propertyStaff = adminData.availableStaff.filter(staff => staff.currentPropertyId === selectedProperty.id);
 
     return (
       <div className="space-y-6">
@@ -590,6 +602,74 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleTaskAssignment = () => {
+    if (selectedTask && selectedStaffForTask) {
+      const selectedStaff = adminData.availableStaff.find(staff => staff.id === selectedStaffForTask);
+      
+      // Update the task with assignment
+      setAllTasks(prev => prev.map(task => 
+        task.id === selectedTask.id 
+          ? { ...task, assignedTo: selectedStaff.name, status: 'in-progress' }
+          : task
+      ));
+      
+      // Update adminData for consistency
+      adminData.allTasks = adminData.allTasks.map(task => 
+        task.id === selectedTask.id 
+          ? { ...task, assignedTo: selectedStaff.name, status: 'in-progress' }
+          : task
+      );
+      
+      setShowTaskAssignment(false);
+      setSelectedTask(null);
+      setSelectedStaffForTask('');
+      alert('Staff assigned to task successfully!');
+    }
+  };
+
+  const handleStaffAssignment = () => {
+    if (selectedProperty && selectedStaffForTask) {
+      const selectedStaff = adminData.availableStaff.find(staff => staff.id === selectedStaffForTask);
+      
+      // Update staff's current property
+      adminData.availableStaff = adminData.availableStaff.map(staff => 
+        staff.id === selectedStaffForTask 
+          ? { ...staff, currentProperty: selectedProperty.name, currentPropertyId: selectedProperty.id }
+          : staff
+      );
+      
+      setShowStaffAssignment(false);
+      setSelectedProperty(null);
+      setSelectedStaffForTask('');
+      alert('Staff sent to property successfully!');
+    }
+  };
+
+  const handleGMAssignment = () => {
+    if (selectedProperty && selectedStaffForTask) {
+      const selectedGM = adminData.availableGMs.find(gm => gm.id === selectedStaffForTask);
+      
+      // Update GM's current property
+      adminData.availableGMs = adminData.availableGMs.map(gm => 
+        gm.id === selectedStaffForTask 
+          ? { ...gm, currentProperty: selectedProperty.name, currentPropertyId: selectedProperty.id, status: 'assigned' }
+          : gm
+      );
+      
+      // Update property's assigned GM
+      adminData.properties = adminData.properties.map(prop => 
+        prop.id === selectedProperty.id 
+          ? { ...prop, assignedGM: selectedGM.name }
+          : prop
+      );
+      
+      setShowGMAssignment(false);
+      setSelectedProperty(null);
+      setSelectedStaffForTask('');
+      alert('General Manager assigned to property successfully!');
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -624,10 +704,14 @@ export default function AdminDashboard() {
             
             <div className="mb-4">
               <label className="block text-white text-sm font-medium mb-2">Select Staff Member:</label>
-              <select className="w-full bg-[#101828] border rounded px-3 py-2">
+              <select 
+                className="w-full bg-[#101828] border rounded px-3 py-2"
+                value={selectedStaffForTask}
+                onChange={(e) => setSelectedStaffForTask(e.target.value)}
+              >
                 <option value="">Choose staff member...</option>
                 {adminData.availableStaff
-                  .filter(staff => staff.currentProperty === selectedTask.property && staff.status === 'available')
+                  .filter(staff => staff.currentPropertyId === selectedTask.propertyId && staff.status === 'available')
                   .map(staff => (
                     <option key={staff.id} value={staff.id}>{staff.name} - {staff.position}</option>
                   ))
@@ -637,17 +721,13 @@ export default function AdminDashboard() {
             
             <div className="flex justify-end space-x-2">
               <button
-                // onClick={() => setShowTaskAssignment(false)}
+                onClick={() => setShowTaskAssignment(false)}
                 className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
               >
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  // Dummy action - update UI
-                  setShowTaskAssignment(false);
-                  alert('Staff assigned to task successfully!');
-                }}
+                onClick={handleTaskAssignment}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Assign
@@ -666,7 +746,11 @@ export default function AdminDashboard() {
             
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Select Staff Member:</label>
-              <select className="w-full bg-[#101828] border rounded px-3 py-2">
+              <select 
+                className="w-full bg-[#101828] border rounded px-3 py-2"
+                value={selectedStaffForTask}
+                onChange={(e) => setSelectedStaffForTask(e.target.value)}
+              >
                 <option value="">Choose staff member...</option>
                 {adminData.availableStaff
                   .filter(staff => staff.status === 'available')
@@ -685,11 +769,7 @@ export default function AdminDashboard() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  // Dummy action - update UI
-                  setShowStaffAssignment(false);
-                  alert('Staff sent to property successfully!');
-                }}
+                onClick={handleStaffAssignment}
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
                 Send Staff
@@ -708,7 +788,11 @@ export default function AdminDashboard() {
             
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Select General Manager:</label>
-              <select className="w-full border rounded px-3 py-2">
+              <select 
+                className="w-full border rounded px-3 py-2"
+                value={selectedStaffForTask}
+                onChange={(e) => setSelectedStaffForTask(e.target.value)}
+              >
                 <option value="">Choose GM...</option>
                 {adminData.availableGMs
                   .filter(gm => gm.status === 'available')
@@ -727,11 +811,7 @@ export default function AdminDashboard() {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  // Dummy action - update UI
-                  setShowGMAssignment(false);
-                  alert('General Manager assigned to property successfully!');
-                }}
+                onClick={handleGMAssignment}
                 className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
               >
                 Assign GM

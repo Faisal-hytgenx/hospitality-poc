@@ -18,7 +18,7 @@ const housekeepingData = {
     {
       id: 'hk-1',
       name: 'Alex Johnson',
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       currentTask: 'Room 301 Cleaning',
       tasksCompleted: 8,
       efficiency: 98,
@@ -27,7 +27,7 @@ const housekeepingData = {
     {
       id: 'hk-2',
       name: 'Jamie Smith',
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       currentTask: 'Restocking Supplies',
       tasksCompleted: 6,
       efficiency: 95,
@@ -36,7 +36,7 @@ const housekeepingData = {
     {
       id: 'hk-3',
       name: 'Taylor Brown',
-      property: 'Business Hotel Central',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       currentTask: 'Deep Cleaning Room 105',
       tasksCompleted: 7,
       efficiency: 94,
@@ -50,7 +50,7 @@ const housekeepingData = {
       type: 'Regular Cleaning',
       status: 'in-progress',
       assignedTo: 'Alex Johnson',
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       priority: 'high'
     },
     {
@@ -59,7 +59,7 @@ const housekeepingData = {
       type: 'Restocking',
       status: 'in-progress',
       assignedTo: 'Jamie Smith',
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       priority: 'medium'
     },
     {
@@ -68,7 +68,7 @@ const housekeepingData = {
       type: 'Deep Cleaning',
       status: 'pending',
       assignedTo: 'Taylor Brown',
-      property: 'Business Hotel Central',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       priority: 'high'
     }
   ]
@@ -136,6 +136,10 @@ export default function HousekeepingDashboard() {
     {
       key: 'type',
       label: 'Task Type'
+    },
+    {
+      key: 'property',
+      label: 'Property'
     },
     {
       key: 'assignedTo',

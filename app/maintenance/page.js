@@ -18,7 +18,7 @@ const maintenanceData = {
     {
       id: 'mt-1',
       name: 'Riley Wilson',
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       currentTask: 'AC Maintenance',
       tasksCompleted: 5,
       efficiency: 97,
@@ -28,7 +28,7 @@ const maintenanceData = {
     {
       id: 'mt-2',
       name: 'Sam Davis',
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       currentTask: 'Plumbing Repair Room 402',
       tasksCompleted: 4,
       efficiency: 96,
@@ -38,7 +38,7 @@ const maintenanceData = {
     {
       id: 'mt-3',
       name: 'Jordan Lee',
-      property: 'Business Hotel Central',
+      property: 'Holiday Inn San Antonio Stone Oak Area',
       currentTask: 'Electrical Inspection',
       tasksCompleted: 6,
       efficiency: 98,
@@ -53,7 +53,7 @@ const maintenanceData = {
       issue: 'Shower Leak',
       status: 'in-progress',
       assignedTo: 'Sam Davis',
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       priority: 'high',
       type: 'Plumbing'
     },
@@ -63,7 +63,7 @@ const maintenanceData = {
       issue: 'AC Maintenance',
       status: 'in-progress',
       assignedTo: 'Riley Wilson',
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       priority: 'medium',
       type: 'HVAC'
     },
@@ -73,7 +73,7 @@ const maintenanceData = {
       issue: 'Electrical Inspection',
       status: 'pending',
       assignedTo: 'Jordan Lee',
-      property: 'Business Hotel Central',
+      property: 'Holiday Inn San Antonio Stone Oak Area',
       priority: 'medium',
       type: 'Electrical'
     }
@@ -157,6 +157,10 @@ export default function MaintenanceDashboard() {
     {
       key: 'issue',
       label: 'Issue'
+    },
+    {
+      key: 'property',
+      label: 'Property'
     },
     {
       key: 'type',

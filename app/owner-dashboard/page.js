@@ -14,7 +14,7 @@ const mockStaff = {
       name: 'Alex Johnson', 
       skills: ['Room Cleaning', 'Deep Clean', 'Laundry'],
       available: true, 
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       tasksCompleted: 145,
       rating: 4.8,
       efficiency: 98,
@@ -26,7 +26,7 @@ const mockStaff = {
       name: 'Jamie Smith', 
       skills: ['Deep Clean', 'Inventory'],
       available: true, 
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       tasksCompleted: 132,
       rating: 4.9,
       efficiency: 95,
@@ -38,7 +38,7 @@ const mockStaff = {
       name: 'Taylor Brown', 
       skills: ['Room Cleaning', 'Maintenance'],
       available: false, 
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       tasksCompleted: 128,
       rating: 4.7,
       efficiency: 94,
@@ -52,7 +52,7 @@ const mockStaff = {
       name: 'Riley Wilson', 
       skills: ['HVAC', 'Electrical'],
       available: true, 
-      property: 'Resort & Spa',
+      property: 'Holiday Inn San Antonio NW',
       tasksCompleted: 89,
       rating: 4.9,
       efficiency: 97,
@@ -64,7 +64,7 @@ const mockStaff = {
       name: 'Sam Davis', 
       skills: ['Plumbing', 'General Repairs'],
       available: false, 
-      property: 'Luxury Hotel Downtown',
+      property: 'Hyatt Place San Antonio NW Medical Center',
       tasksCompleted: 93,
       rating: 4.8,
       efficiency: 96,
@@ -76,7 +76,7 @@ const mockStaff = {
 
 // Mock property metrics
 const mockMetrics = {
-  'Luxury Hotel Downtown': {
+  'Hyatt Place San Antonio NW Medical Center': {
     revenue: '$124,500',
     occupancyRate: '87%',
     guestSatisfaction: 4.8,
@@ -95,23 +95,42 @@ const mockMetrics = {
       pending: 3
     }
   },
-  'Resort & Spa': {
-    revenue: '$156,800',
+  'Holiday Inn San Antonio NW': {
+    revenue: '$98,300',
     occupancyRate: '92%',
     guestSatisfaction: 4.9,
     taskCompletion: '98%',
     staffing: {
-      total: 35,
-      active: 32,
+      total: 20,
+      active: 18,
       departments: {
-        housekeeping: 20,
-        maintenance: 15
+        housekeeping: 12,
+        maintenance: 8
       }
     },
     tasks: {
-      total: 60,
-      completed: 57,
+      total: 35,
+      completed: 32,
       pending: 3
+    }
+  },
+  'Holiday Inn San Antonio Stone Oak Area': {
+    revenue: '$156,800',
+    occupancyRate: '85%',
+    guestSatisfaction: 4.7,
+    taskCompletion: '94%',
+    staffing: {
+      total: 22,
+      active: 20,
+      departments: {
+        housekeeping: 13,
+        maintenance: 9
+      }
+    },
+    tasks: {
+      total: 40,
+      completed: 38,
+      pending: 2
     }
   }
 };
@@ -149,7 +168,7 @@ export default function OwnerDashboard() {
     setStaffMembers(filteredStaff);
 
     // Default selected property: first from owner's list or first available in data
-    const defaultProperty = ownerPropertyNames[0] || filteredStaff[0]?.property || 'Luxury Hotel Downtown';
+    const defaultProperty = ownerPropertyNames[0] || filteredStaff[0]?.property || 'Hyatt Place San Antonio NW Medical Center';
     setSelectedProperty(defaultProperty);
     setPropertyMetrics(mockMetrics[defaultProperty] || null);
   }, [user]);

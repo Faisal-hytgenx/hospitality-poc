@@ -1,7 +1,8 @@
 [
   { 
     "id": "m-1", 
-    "propertyId": "hyatt-san-antonio-nw", 
+    "propertyId": "hyatt-san-antonio-nw",
+    "propertyName": "Hyatt Place San Antonio NW Medical Center",
     "issue": "HVAC check Room 202", 
     "priority": "high", 
     "status": "open",
@@ -11,7 +12,8 @@
   },
   { 
     "id": "m-2", 
-    "propertyId": "holiday-inn-san-antonio-nw", 
+    "propertyId": "holiday-inn-san-antonio-nw",
+    "propertyName": "Holiday Inn San Antonio NW",
     "issue": "Leaky faucet Room 118", 
     "priority": "medium", 
     "status": "open",
@@ -21,7 +23,8 @@
   },
   { 
     "id": "m-3", 
-    "propertyId": "hyatt-san-antonio-nw", 
+    "propertyId": "hyatt-san-antonio-nw",
+    "propertyName": "Hyatt Place San Antonio NW Medical Center",
     "issue": "Leaky faucet Room 303", 
     "priority": "low", 
     "status": "in-progress",
@@ -33,7 +36,8 @@
   },
   { 
     "id": "m-4", 
-    "propertyId": "holiday-inn-stone-oak", 
+    "propertyId": "holiday-inn-stone-oak",
+    "propertyName": "Holiday Inn San Antonio Stone Oak Area",
     "issue": "AC not working Room 202", 
     "priority": "high", 
     "status": "open",

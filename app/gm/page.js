@@ -4,17 +4,17 @@ import { useState } from 'react';
 import Card from '@/components/Card';
 import Table from '@/components/Table';
 
-// Mock data for General Manager - Resort & Spa property
+// Mock data for General Manager - Holiday Inn San Antonio NW property
 const gmData = {
   property: {
-    id: 'property2',
-    name: 'Resort & Spa',
-    totalStaff: 35,
-    activeStaff: 32,
+    id: 'holiday-inn-san-antonio-nw',
+    name: 'Holiday Inn San Antonio NW',
+    totalStaff: 20,
+    activeStaff: 18,
     occupancy: '92%',
-    revenue: '$156,800',
+    revenue: '$98,300',
     efficiency: 98,
-    tasks: { total: 60, completed: 57 }
+    tasks: { total: 35, completed: 32 }
   },
   employees: [
     {

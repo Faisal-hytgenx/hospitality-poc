@@ -19,8 +19,8 @@ export const revenueData = {
     }
   },
   propertyComparison: {
-    property1: {
-      name: 'Luxury Hotel Downtown',
+    'hyatt-san-antonio-nw': {
+      name: 'Hyatt Place San Antonio NW Medical Center',
       currentPeriod: {
         revenue: 124500,
         occupancy: 87,
@@ -36,21 +36,38 @@ export const revenueData = {
         marketShare: 26
       }
     },
-    property2: {
-      name: 'Resort & Spa',
+    'holiday-inn-san-antonio-nw': {
+      name: 'Holiday Inn San Antonio NW',
       currentPeriod: {
-        revenue: 156800,
+        revenue: 98300,
         occupancy: 92,
-        avgDailyRate: 210,
-        revPAR: 193,
+        avgDailyRate: 130,
+        revPAR: 119,
         marketShare: 32
       },
       previousPeriod: {
-        revenue: 148500,
+        revenue: 92500,
         occupancy: 88,
-        avgDailyRate: 205,
-        revPAR: 180,
+        avgDailyRate: 125,
+        revPAR: 110,
         marketShare: 30
+      }
+    },
+    'holiday-inn-stone-oak': {
+      name: 'Holiday Inn San Antonio Stone Oak Area',
+      currentPeriod: {
+        revenue: 156800,
+        occupancy: 85,
+        avgDailyRate: 140,
+        revPAR: 119,
+        marketShare: 25
+      },
+      previousPeriod: {
+        revenue: 148500,
+        occupancy: 80,
+        avgDailyRate: 135,
+        revPAR: 108,
+        marketShare: 23
       }
     }
   },

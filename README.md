@@ -1,4 +1,24 @@
+# Hospitality Management POC
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Features
+
+### Role-Based Navigation
+The application now supports different user roles with distinct dashboards and navigation:
+
+- **Admin**: System administrator with access to all properties and system-wide metrics
+- **General Manager**: Property manager with focused view on specific property operations
+  - GM Dashboard: View all employees in the assigned property with performance metrics
+  - Assign Tasks: Create and assign tasks to staff members
+- **Property Owner**: Portfolio overview with financial metrics and property values
+- **Staff**: Individual staff member dashboard and task management
+
+### General Manager Features
+- **Employee Overview**: View all staff members in the assigned property with detailed performance metrics
+- **Task Assignment**: Assign predefined tasks or create custom tasks for staff members
+- **Department Filtering**: Filter employees by department (Housekeeping, Maintenance, Front Desk)
+- **Performance Tracking**: Monitor staff efficiency, attendance, and task completion rates
 
 ## Getting Started
 

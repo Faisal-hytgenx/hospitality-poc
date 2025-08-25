@@ -1,171 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@/components/Card';
-
-// Mock data for task assignment
-const taskData = {
-  property: {
-    id: 'property2',
-    name: 'Resort & Spa'
-  },
-  employees: [
-    {
-      id: 'emp-1',
-      name: 'Alex Johnson',
-      department: 'housekeeping',
-      position: 'Senior Housekeeper',
-      status: 'active',
-      currentTask: 'Room 301 Cleaning',
-      skills: ['Room Cleaning', 'Deep Clean', 'Laundry'],
-      efficiency: 98
-    },
-    {
-      id: 'emp-2',
-      name: 'Jamie Smith',
-      department: 'housekeeping',
-      position: 'Housekeeper',
-      status: 'active',
-      currentTask: 'Restocking Supplies',
-      skills: ['Deep Clean', 'Inventory'],
-      efficiency: 95
-    },
-    {
-      id: 'emp-3',
-      name: 'Taylor Brown',
-      department: 'housekeeping',
-      position: 'Housekeeper',
-      status: 'busy',
-      currentTask: 'Deep Cleaning Room 105',
-      skills: ['Room Cleaning', 'Maintenance'],
-      efficiency: 94
-    },
-    {
-      id: 'emp-4',
-      name: 'Riley Wilson',
-      department: 'maintenance',
-      position: 'Maintenance Technician',
-      status: 'active',
-      currentTask: 'AC Maintenance',
-      skills: ['HVAC', 'Electrical'],
-      efficiency: 97
-    },
-    {
-      id: 'emp-5',
-      name: 'Sam Davis',
-      department: 'maintenance',
-      position: 'Plumber',
-      status: 'busy',
-      currentTask: 'Fixing Shower in 402',
-      skills: ['Plumbing', 'General Repairs'],
-      efficiency: 96
-    },
-    {
-      id: 'emp-6',
-      name: 'Casey Lee',
-      department: 'front-desk',
-      position: 'Front Desk Manager',
-      status: 'active',
-      currentTask: 'Guest Check-in',
-      skills: ['Customer Service', 'Reservations'],
-      efficiency: 99
-    }
-  ],
-  taskTemplates: [
-    {
-      id: 'task-1',
-      title: 'Room Cleaning',
-      description: 'Standard room cleaning and preparation',
-      department: 'housekeeping',
-      priority: 'medium',
-      estimatedTime: '30 min',
-      skills: ['Room Cleaning']
-    },
-    {
-      id: 'task-2',
-      title: 'Deep Cleaning',
-      description: 'Thorough deep cleaning of rooms',
-      department: 'housekeeping',
-      priority: 'high',
-      estimatedTime: '2 hours',
-      skills: ['Deep Clean']
-    },
-    {
-      id: 'task-3',
-      title: 'HVAC Maintenance',
-      description: 'Air conditioning system maintenance',
-      department: 'maintenance',
-      priority: 'high',
-      estimatedTime: '1 hour',
-      skills: ['HVAC']
-    },
-    {
-      id: 'task-4',
-      title: 'Plumbing Repair',
-      description: 'Fix plumbing issues in guest rooms',
-      department: 'maintenance',
-      priority: 'high',
-      estimatedTime: '45 min',
-      skills: ['Plumbing']
-    },
-    {
-      id: 'task-5',
-      title: 'Guest Check-in',
-      description: 'Assist with guest check-in process',
-      department: 'front-desk',
-      priority: 'medium',
-      estimatedTime: '15 min',
-      skills: ['Customer Service']
-    },
-    {
-      id: 'task-6',
-      title: 'Inventory Management',
-      description: 'Restock and organize supplies',
-      department: 'housekeeping',
-      priority: 'low',
-      estimatedTime: '1 hour',
-      skills: ['Inventory']
-    }
-  ],
-  pendingTasks: [
-    {
-      id: 'pending-1',
-      title: 'Room 205 Cleaning',
-      description: 'Standard cleaning for checkout',
-      department: 'housekeeping',
-      priority: 'medium',
-      assignedTo: null,
-      dueTime: '2:00 PM',
-      status: 'pending'
-    },
-    {
-      id: 'pending-2',
-      title: 'Fix Leaking Faucet - Room 312',
-      description: 'Guest reported leaking bathroom faucet',
-      department: 'maintenance',
-      priority: 'high',
-      assignedTo: null,
-      dueTime: '1:30 PM',
-      status: 'pending'
-    },
-    {
-      id: 'pending-3',
-      title: 'Deep Clean Suite 401',
-      description: 'VIP guest suite preparation',
-      department: 'housekeeping',
-      priority: 'high',
-      assignedTo: null,
-      dueTime: '3:00 PM',
-      status: 'pending'
-    }
-  ]
-};
+import { mockStaff, mockTasks, mockProperties } from '@/data/mockData';
 
 export default function AssignTasks() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
-  const [pendingTasks, setPendingTasks] = useState(taskData.pendingTasks);
+  const [pendingTasks, setPendingTasks] = useState([]);
+  const [availableStaff, setAvailableStaff] = useState([]);
   const [customTask, setCustomTask] = useState({
     title: '',
     description: '',
@@ -174,6 +18,19 @@ export default function AssignTasks() {
     estimatedTime: '',
     dueTime: ''
   });
+
+  // Initialize data on component mount
+  useEffect(() => {
+    // Get all pending tasks from mock data
+    const allTasks = [...mockTasks.housekeeping, ...mockTasks.maintenance];
+    const pending = allTasks.filter(task => task.status === 'pending');
+    setPendingTasks(pending);
+
+    // Get all available staff
+    const allStaff = [...mockStaff.housekeeping, ...mockStaff.maintenance];
+    const available = allStaff.filter(staff => staff.available);
+    setAvailableStaff(available);
+  }, []);
 
   const getStatusBadge = (status) => {
     const styles = {
@@ -193,7 +50,7 @@ export default function AssignTasks() {
     const styles = {
       high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
       medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+      low: 'bg-green-100 text-green-800 dark:bg-red-900 dark:text-green-300'
     };
 
     return (
@@ -204,6 +61,7 @@ export default function AssignTasks() {
   };
 
   const getDepartmentBadge = (department) => {
+    if (!department) return null;
     const styles = {
       housekeeping: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
       maintenance: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
@@ -211,22 +69,51 @@ export default function AssignTasks() {
     };
 
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[department]}`}>
-        {department.replace('-', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[department] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
+        {String(department).replace('-', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
       </span>
     );
   };
-
-  const availableEmployees = taskData.employees.filter(emp => emp.status === 'active');
 
   const handleAssignTask = () => {
     if (selectedTask && selectedEmployee) {
       // Update pending tasks UI state to reflect assignment
       setPendingTasks(prev => prev.map(t => (
         t.id === selectedTask.id
-          ? { ...t, assignedTo: selectedEmployee.name, status: 'in-progress' }
+          ? { ...t, assignedTo: selectedEmployee.name, assignedToId: selectedEmployee.id, status: 'in-progress' }
           : t
       )));
+
+      // Update the mock data for consistency
+      if (selectedTask.department === 'housekeeping') {
+        const taskIndex = mockTasks.housekeeping.findIndex(t => t.id === selectedTask.id);
+        if (taskIndex !== -1) {
+          mockTasks.housekeeping[taskIndex] = {
+            ...mockTasks.housekeeping[taskIndex],
+            assignedTo: selectedEmployee.name,
+            assignedToId: selectedEmployee.id,
+            status: 'in-progress'
+          };
+        }
+      } else if (selectedTask.department === 'maintenance') {
+        const taskIndex = mockTasks.maintenance.findIndex(t => t.id === selectedTask.id);
+        if (taskIndex !== -1) {
+          mockTasks.maintenance[taskIndex] = {
+            ...mockTasks.maintenance[taskIndex],
+            assignedTo: selectedEmployee.name,
+            assignedToId: selectedEmployee.id,
+            status: 'in-progress'
+          };
+        }
+      }
+
+      // Update staff availability
+      setAvailableStaff(prev => prev.map(staff => 
+        staff.id === selectedEmployee.id 
+          ? { ...staff, available: false, currentTask: selectedTask.title }
+          : staff
+      ));
+
       setShowAssignmentModal(false);
       setSelectedTask(null);
       setSelectedEmployee(null);
@@ -235,6 +122,7 @@ export default function AssignTasks() {
 
   const handleCreateCustomTask = () => {
     if (!customTask.title || !customTask.description) return;
+    
     const newTask = {
       id: `pending-${Date.now()}`,
       title: customTask.title,
@@ -242,10 +130,34 @@ export default function AssignTasks() {
       department: customTask.department,
       priority: customTask.priority,
       assignedTo: selectedEmployee ? selectedEmployee.name : null,
+      assignedToId: selectedEmployee ? selectedEmployee.id : null,
       dueTime: customTask.dueTime || 'TBD',
-      status: 'pending'
+      status: selectedEmployee ? 'in-progress' : 'pending',
+      property: 'hyatt-san-antonio-nw', // Default property for demo
+      propertyName: 'Hyatt Place San Antonio NW Medical Center',
+      estimatedDuration: customTask.estimatedTime || 'TBD',
+      type: 'custom',
+      location: 'TBD'
     };
+
     setPendingTasks(prev => [newTask, ...prev]);
+
+    // Add to mock data
+    if (customTask.department === 'housekeeping') {
+      mockTasks.housekeeping.push(newTask);
+    } else if (customTask.department === 'maintenance') {
+      mockTasks.maintenance.push(newTask);
+    }
+
+    // Update staff availability if assigned
+    if (selectedEmployee) {
+      setAvailableStaff(prev => prev.map(staff => 
+        staff.id === selectedEmployee.id 
+          ? { ...staff, available: false, currentTask: customTask.title }
+          : staff
+      ));
+    }
+
     setCustomTask({
       title: '',
       description: '',
@@ -254,15 +166,17 @@ export default function AssignTasks() {
       estimatedTime: '',
       dueTime: ''
     });
-    // Keep selected employee for convenience
   };
+
+  // Get current property (for demo purposes, using the first property)
+  const currentProperty = mockProperties['hyatt-san-antonio-nw'];
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Assign Tasks</h1>
         <div className="text-sm text-gray-500">
-          Property: <span className="font-medium text-gray-900">{taskData.property.name}</span>
+          Property: <span className="font-medium text-gray-900">{currentProperty.name}</span>
         </div>
       </div>
 
@@ -270,17 +184,17 @@ export default function AssignTasks() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
           title="Available Staff" 
-          value={availableEmployees.length}
-          subtitle={`${taskData.employees.length} Total Staff`}
+          value={availableStaff.length}
+          subtitle={`${availableStaff.length + (mockStaff.housekeeping.length + mockStaff.maintenance.length - availableStaff.length)} Total Staff`}
         />
         <Card 
           title="Pending Tasks" 
-          value={pendingTasks.length}
+          value={pendingTasks.filter(t => t.status === 'pending').length}
           subtitle="Need Assignment"
         />
         <Card 
           title="Active Tasks" 
-          value={taskData.employees.filter(emp => emp.status === 'busy').length}
+          value={pendingTasks.filter(t => t.status === 'in-progress').length}
           subtitle="Currently Working"
         />
         <Card 
@@ -297,7 +211,7 @@ export default function AssignTasks() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Available Staff</h2>
           <div className="space-y-3">
-            {availableEmployees.map((employee) => (
+            {availableStaff.map((employee) => (
               <div 
                 key={employee.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -310,13 +224,13 @@ export default function AssignTasks() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-medium">{employee.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{employee.position}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{employee.department}</p>
                     <div className="flex items-center space-x-2 mt-2">
                       {getDepartmentBadge(employee.department)}
                       <span className="text-sm text-gray-500">Efficiency: {employee.efficiency}%</span>
                     </div>
                   </div>
-                  {getStatusBadge(employee.status)}
+                  {getStatusBadge(employee.available ? 'active' : 'busy')}
                 </div>
                 <div className="mt-2">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -339,7 +253,44 @@ export default function AssignTasks() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Task Templates</h2>
           <div className="space-y-3">
-            {taskData.taskTemplates.map((task) => (
+            {[
+              {
+                id: 'task-1',
+                title: 'Room Cleaning',
+                description: 'Standard room cleaning and preparation',
+                department: 'housekeeping',
+                priority: 'medium',
+                estimatedTime: '30 min',
+                skills: ['Room Cleaning']
+              },
+              {
+                id: 'task-2',
+                title: 'Deep Cleaning',
+                description: 'Thorough deep cleaning of rooms',
+                department: 'housekeeping',
+                priority: 'high',
+                estimatedTime: '2 hours',
+                skills: ['Deep Clean']
+              },
+              {
+                id: 'task-3',
+                title: 'HVAC Maintenance',
+                description: 'Air conditioning system maintenance',
+                department: 'maintenance',
+                priority: 'high',
+                estimatedTime: '1 hour',
+                skills: ['HVAC']
+              },
+              {
+                id: 'task-4',
+                title: 'Plumbing Repair',
+                description: 'Fix plumbing issues in guest rooms',
+                department: 'maintenance',
+                priority: 'high',
+                estimatedTime: '45 min',
+                skills: ['Plumbing']
+              }
+            ].map((task) => (
               <div 
                 key={task.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -371,7 +322,7 @@ export default function AssignTasks() {
         <h2 className="text-xl font-semibold mb-4">Pending Tasks</h2>
         <div className="space-y-3">
           {pendingTasks.map((task) => (
-            <div key={task.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div key={`${task.id}-${task.department || 'dept'}`} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-medium">{task.title}</h3>
@@ -385,15 +336,22 @@ export default function AssignTasks() {
                     )}
                   </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setSelectedTask(task);
-                    setShowAssignmentModal(true);
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Assign
-                </button>
+                {task.status === 'pending' && (
+                  <button
+                    onClick={() => {
+                      setSelectedTask(task);
+                      setShowAssignmentModal(true);
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Assign
+                  </button>
+                )}
+                {task.status === 'in-progress' && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    In Progress
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -419,14 +377,14 @@ export default function AssignTasks() {
                   className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
                   value={selectedEmployee?.id || ''}
                   onChange={(e) => {
-                    const emp = availableEmployees.find(emp => emp.id === e.target.value);
+                    const emp = availableStaff.find(emp => emp.id === e.target.value);
                     setSelectedEmployee(emp);
                   }}
                 >
                   <option value="">Select employee...</option>
-                  {availableEmployees.map((emp) => (
+                  {availableStaff.map((emp) => (
                     <option key={emp.id} value={emp.id}>
-                      {emp.name} - {emp.position}
+                      {emp.name} - {emp.department}
                     </option>
                   ))}
                 </select>
@@ -461,14 +419,14 @@ export default function AssignTasks() {
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700"
               value={selectedEmployee?.id || ''}
               onChange={(e) => {
-                const emp = availableEmployees.find(emp => emp.id === e.target.value);
+                const emp = availableStaff.find(emp => emp.id === e.target.value);
                 setSelectedEmployee(emp);
               }}
             >
               <option value="">Choose employee...</option>
-              {availableEmployees.map((emp) => (
+              {availableStaff.map((emp) => (
                 <option key={emp.id} value={emp.id}>
-                  {emp.name} - {emp.position}
+                  {emp.name} - {emp.department}
                 </option>
               ))}
             </select>

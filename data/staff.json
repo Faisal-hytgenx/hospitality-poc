@@ -4,11 +4,56 @@
     "avgRoomsPerDay": 12,
     "pendingTasks": 5,
     "people": [
-      { "id": "hk-1", "name": "Alex", "skills": ["cleaning"], "available": true },
-      { "id": "hk-2", "name": "Jamie", "skills": ["deep-clean"], "available": true },
-      { "id": "hk-3", "name": "Taylor", "skills": ["cleaning", "maintenance"], "available": false },
-      { "id": "hk-4", "name": "Morgan", "skills": ["cleaning"], "available": true },
-      { "id": "hk-5", "name": "Casey", "skills": ["deep-clean"], "available": true }
+      { 
+        "id": "hk-1", 
+        "name": "Alex", 
+        "skills": ["cleaning"], 
+        "available": true,
+        "propertyId": "hyatt-san-antonio-nw",
+        "propertyName": "Hyatt Place San Antonio NW Medical Center",
+        "efficiency": 98,
+        "currentTask": "Room 301 Cleaning"
+      },
+      { 
+        "id": "hk-2", 
+        "name": "Jamie", 
+        "skills": ["deep-clean"], 
+        "available": true,
+        "propertyId": "holiday-inn-san-antonio-nw",
+        "propertyName": "Holiday Inn San Antonio NW",
+        "efficiency": 95,
+        "currentTask": "Restocking Supplies"
+      },
+      { 
+        "id": "hk-3", 
+        "name": "Taylor", 
+        "skills": ["cleaning", "maintenance"], 
+        "available": false,
+        "propertyId": "hyatt-san-antonio-nw",
+        "propertyName": "Hyatt Place San Antonio NW Medical Center",
+        "efficiency": 94,
+        "currentTask": "Deep Cleaning Room 105"
+      },
+      { 
+        "id": "hk-4", 
+        "name": "Morgan", 
+        "skills": ["cleaning"], 
+        "available": true,
+        "propertyId": "holiday-inn-stone-oak",
+        "propertyName": "Holiday Inn San Antonio Stone Oak Area",
+        "efficiency": 96,
+        "currentTask": "Room 205 Cleaning"
+      },
+      { 
+        "id": "hk-5", 
+        "name": "Casey", 
+        "skills": ["deep-clean"], 
+        "available": true,
+        "propertyId": "holiday-inn-stone-oak",
+        "propertyName": "Holiday Inn San Antonio Stone Oak Area",
+        "efficiency": 97,
+        "currentTask": "Suite 401 Preparation"
+      }
     ]
   },
   "maintenance": {
@@ -16,10 +61,46 @@
     "avgRequestsPerDay": 3,
     "pendingIssues": 2,
     "people": [
-      { "id": "mt-1", "name": "Riley", "skills": ["HVAC"], "available": true },
-      { "id": "mt-2", "name": "Sam", "skills": ["plumbing"], "available": false },
-      { "id": "mt-3", "name": "Jordan", "skills": ["electrical"], "available": true },
-      { "id": "mt-4", "name": "Avery", "skills": ["HVAC", "plumbing"], "available": true }
+      { 
+        "id": "mt-1", 
+        "name": "Riley", 
+        "skills": ["HVAC"], 
+        "available": true,
+        "propertyId": "holiday-inn-san-antonio-nw",
+        "propertyName": "Holiday Inn San Antonio NW",
+        "efficiency": 97,
+        "currentTask": "AC Maintenance"
+      },
+      { 
+        "id": "mt-2", 
+        "name": "Sam", 
+        "skills": ["plumbing"], 
+        "available": false,
+        "propertyId": "hyatt-san-antonio-nw",
+        "propertyName": "Hyatt Place San Antonio NW Medical Center",
+        "efficiency": 96,
+        "currentTask": "Fixing Shower in 402"
+      },
+      { 
+        "id": "mt-3", 
+        "name": "Jordan", 
+        "skills": ["electrical"], 
+        "available": true,
+        "propertyId": "holiday-inn-stone-oak",
+        "propertyName": "Holiday Inn San Antonio Stone Oak Area",
+        "efficiency": 95,
+        "currentTask": "Light Fixture Replacement"
+      },
+      { 
+        "id": "mt-4", 
+        "name": "Avery", 
+        "skills": ["HVAC", "plumbing"], 
+        "available": true,
+        "propertyId": "hyatt-san-antonio-nw",
+        "propertyName": "Hyatt Place San Antonio NW Medical Center",
+        "efficiency": 94,
+        "currentTask": "Routine Inspection"
+      }
     ]
   }
 }
