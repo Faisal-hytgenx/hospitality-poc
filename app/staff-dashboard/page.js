@@ -144,6 +144,10 @@ export default function StaffDashboard() {
     );
   };
 
+  const updateTaskStatus = (taskId, status) => {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status } : t));
+  };
+
   const columns = [
     {
       key: "title",
@@ -173,6 +177,38 @@ export default function StaffDashboard() {
     {
       key: "dueTime",
       label: "Due Time"
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (value, row) => (
+        <div className="flex flex-wrap gap-2">
+          {row.status !== 'pending' && (
+            <button
+              className="px-3 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+              onClick={() => updateTaskStatus(row.id, 'pending')}
+            >
+              Pending
+            </button>
+          )}
+          {row.status !== 'in-progress' && (
+            <button
+              className="px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300"
+              onClick={() => updateTaskStatus(row.id, 'in-progress')}
+            >
+              In Progress
+            </button>
+          )}
+          {row.status !== 'completed' && (
+            <button
+              className="px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300"
+              onClick={() => updateTaskStatus(row.id, 'completed')}
+            >
+              Complete
+            </button>
+          )}
+        </div>
+      )
     }
   ];
 
