@@ -5,26 +5,48 @@ import { useAuth } from '@/context/AuthContext';
 import Card from '@/components/Card';
 import Table from '@/components/Table';
 
-import { mockStaff, mockProperties } from '@/data/mockData';
+import { mockStaff } from '@/data/mockData';
 
 export default function StaffOverview() {
   const { user } = useAuth();
   const [staffMembers, setStaffMembers] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
 
+  // Demo fallback data shown if no staff found
+  const demoStaff = [
+    { id: 'hk-dem-1', name: 'Alex Johnson', department: 'housekeeping', propertyName: 'Luxury Hotel Downtown', currentLocation: 'Floor 3', currentTask: 'Room 301 Cleaning', schedule: '9AM - 5PM', tasksCompleted: 145, rating: 4.8, available: true },
+    { id: 'hk-dem-2', name: 'Jamie Smith', department: 'housekeeping', propertyName: 'Resort & Spa', currentLocation: 'Storage', currentTask: 'Restocking Supplies', schedule: '8AM - 4PM', tasksCompleted: 132, rating: 4.9, available: true },
+    { id: 'hk-dem-3', name: 'Taylor Brown', department: 'housekeeping', propertyName: 'Luxury Hotel Downtown', currentLocation: 'Floor 1', currentTask: 'Deep Cleaning Room 105', schedule: '10AM - 6PM', tasksCompleted: 128, rating: 4.7, available: false },
+    { id: 'mt-dem-1', name: 'Riley Wilson', department: 'maintenance', propertyName: 'Resort & Spa', currentLocation: 'Basement', currentTask: 'AC Maintenance', schedule: '7AM - 3PM', tasksCompleted: 89, rating: 4.9, available: true },
+    { id: 'mt-dem-2', name: 'Sam Davis', department: 'maintenance', propertyName: 'Luxury Hotel Downtown', currentLocation: 'Floor 4', currentTask: 'Fixing Shower in 402', schedule: '9AM - 5PM', tasksCompleted: 93, rating: 4.8, available: false },
+    { id: 'mt-dem-3', name: 'Jordan Lee', department: 'maintenance', propertyName: 'Holiday Inn San Antonio Stone Oak Area', currentLocation: 'Lobby', currentTask: 'Electrical Inspection', schedule: '11AM - 7PM', tasksCompleted: 76, rating: 4.6, available: true }
+  ];
+
   useEffect(() => {
-    // Combine all staff and filter by owner's properties
-    const allStaff = [
+    // Combine all staff. If owner properties exist, filter by them; otherwise show all for demo
+    const combined = [
       ...mockStaff.housekeeping.map(s => ({ ...s, department: 'housekeeping' })),
       ...mockStaff.maintenance.map(s => ({ ...s, department: 'maintenance' }))
-    ].filter(staff => user?.properties?.includes(staff.property));
+    ];
 
-    setStaffMembers(allStaff);
+    const ownerProps = Array.isArray(user?.properties) ? user.properties : null;
+    const filtered = ownerProps && ownerProps.length ? combined.filter(staff => ownerProps.includes(staff.property)) : combined;
+
+    // Normalize property display name
+    const normalized = filtered.map(s => ({
+      ...s,
+      propertyName: s.propertyName || s.property
+    }));
+
+    setStaffMembers(normalized);
   }, [user]);
 
   const filteredStaff = selectedDepartment === 'all' 
     ? staffMembers 
     : staffMembers.filter(staff => staff.department === selectedDepartment);
+
+  // Always have something to show for demo
+  const effectiveStaff = (filteredStaff.length ? filteredStaff : (staffMembers.length ? staffMembers : demoStaff));
 
   const getStatusBadge = (available) => {
     const styles = {
@@ -53,10 +75,11 @@ export default function StaffOverview() {
   };
 
   const getRatingBadge = (rating) => {
+    const safe = typeof rating === 'number' && !isNaN(rating) ? rating : 0;
     return (
       <div className="flex items-center">
         <span className="text-yellow-500 mr-1">★</span>
-        <span>{rating.toFixed(1)}</span>
+        <span>{safe.toFixed(1)}</span>
       </div>
     );
   };
@@ -70,6 +93,10 @@ export default function StaffOverview() {
       key: 'department',
       label: 'Department',
       render: (value) => getDepartmentBadge(value)
+    },
+    {
+      key: 'propertyName',
+      label: 'Property'
     },
     {
       key: 'currentLocation',
@@ -98,6 +125,11 @@ export default function StaffOverview() {
       render: (value) => getStatusBadge(value)
     }
   ];
+
+  const total = effectiveStaff.length || 0;
+  const totalTasksDone = effectiveStaff.reduce((sum, staff) => sum + (staff.tasksCompleted || 0), 0);
+  const avgRating = total ? (effectiveStaff.reduce((sum, staff) => sum + (staff.rating || 0), 0) / total).toFixed(1) : '4.8';
+  const availableNow = effectiveStaff.filter(s => s.available).length;
 
   return (
     <div className="p-6">
@@ -140,25 +172,25 @@ export default function StaffOverview() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card 
           title="Total Staff" 
-          value={staffMembers.length} 
+          value={total} 
         />
         <Card 
           title="Available Now" 
-          value={staffMembers.filter(s => s.available).length}
+          value={availableNow}
         />
         <Card 
           title="Total Tasks Done" 
-          value={staffMembers.reduce((sum, staff) => sum + staff.tasksCompleted, 0)}
+          value={totalTasksDone}
         />
         <Card 
           title="Avg Rating" 
-          value={`${(staffMembers.reduce((sum, staff) => sum + staff.rating, 0) / staffMembers.length).toFixed(1)} ★`}
+          value={`${avgRating} ★`}
         />
       </div>
 
       <div className="bg-[#101828] rounded-lg shadow p-6">
         <Table 
-          data={filteredStaff}
+          data={effectiveStaff}
           columns={columns}
         />
       </div>
